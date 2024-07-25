@@ -3,6 +3,7 @@ import "./App.css";
 import "grapesjs/dist/css/grapes.min.css";
 import GrapesJS from "grapesjs";
 import { useEffect } from "react";
+import gjsPresetWebpagePlugin from "grapesjs-preset-webpage";
 
 function App() {
   // grapesjs setup
@@ -14,11 +15,13 @@ function App() {
       noticeOnUnload: false,
       storageManager: false,
       // plugins here
-      plugins: [],
+      plugins: [gjsPresetWebpagePlugin],
+
       // to apply styles to individual components
       selectorManager: {
         componentFirst: true,
       },
+
       parser: {
         optionsHtml: {
           allowScripts: true,
@@ -26,7 +29,7 @@ function App() {
       },
     });
   }, []);
-  return <div id="gjs">Hello</div>;
+  return <div id="gjs" />;
 }
 
 export default App;
