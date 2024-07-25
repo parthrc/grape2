@@ -24,6 +24,9 @@ function App() {
       selectorManager: {
         componentFirst: true,
       },
+      canvas: {
+        styles: ["styles/main.css"],
+      },
 
       parser: {
         optionsHtml: {

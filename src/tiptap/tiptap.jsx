@@ -1,26 +1,19 @@
-import HardBreak from "@tiptap/extension-hard-break";
 import { EditorContent, useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import CustomEnterExtension from "./plugins/CustomEnterKeyPlugin.jsx";
+import Placeholder from "@tiptap/extension-placeholder";
 
 const Tiptap = () => {
   const tiptapEditor = useEditor({
     extensions: [
       StarterKit,
       CustomEnterExtension,
-      //   HardBreak.extend({
-      //     addKeyboardShortcuts() {
-      //       return {
-      //         Enter: (e) => {
-      //           e.preventDefault();
-      //           console.log("Enter pressed");
-      //           return;
-      //         },
-      //       };
-      //     },
-      //   }),
+      Placeholder.configure({
+        placeholder: `start typing or use "/" for commands...`,
+      }),
     ],
-    content: "Hello tiptap",
+    // content: ``,
+
     autofocus: true,
     // onUpdate function, runs on every keystroke
     onUpdate({ editor }) {
