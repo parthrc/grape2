@@ -4,6 +4,7 @@ import "grapesjs/dist/css/grapes.min.css";
 import GrapesJS from "grapesjs";
 import { useEffect } from "react";
 import gjsPresetWebpagePlugin from "grapesjs-preset-webpage";
+import ReactCoreGrapesjs from "./grapesjs/core/react-core-grapesjs.jsx";
 
 function App() {
   // grapesjs setup
@@ -15,7 +16,7 @@ function App() {
       noticeOnUnload: false,
       storageManager: false,
       // plugins here
-      plugins: [gjsPresetWebpagePlugin],
+      plugins: [gjsPresetWebpagePlugin, ReactCoreGrapesjs],
 
       // to apply styles to individual components
       selectorManager: {
@@ -27,6 +28,15 @@ function App() {
           allowScripts: true,
         },
       },
+    });
+
+    // Add components to as Blocks...
+
+    // adding custom-text-box to Blocks
+    editor.Blocks.add("custom-text-box", {
+      label: "Custom text box",
+      content: { type: "custom-text-box" },
+      category: "React components",
     });
   }, []);
   return <div id="gjs" />;
