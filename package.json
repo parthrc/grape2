@@ -10,6 +10,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@tiptap/extension-hard-break": "^2.5.6",
     "@tiptap/pm": "^2.5.6",
     "@tiptap/react": "^2.5.6",
     "@tiptap/starter-kit": "^2.5.6",
