@@ -5,8 +5,10 @@ import GrapesJS from "grapesjs";
 import { useEffect } from "react";
 import gjsPresetWebpagePlugin from "grapesjs-preset-webpage";
 import ReactCoreGrapesjs from "./grapesjs/core/react-core-grapesjs.jsx";
+import useGrapesjsEditorStore from "./store/GrapesjsEditorStore.jsx";
 
 function App() {
+  const { setGrapesjsEditor } = useGrapesjsEditorStore();
   // grapesjs setup
   useEffect(() => {
     const editor = GrapesJS.init({
@@ -30,6 +32,9 @@ function App() {
       },
     });
 
+    // set editor isntance to zustand store
+    if (editor) setGrapesjsEditor(editor);
+
     // Add components to as Blocks...
 
     // adding custom-text-box to Blocks
@@ -44,8 +49,6 @@ function App() {
     editor.addComponents({
       type: "custom-text-box",
     });
-
-    
   }, []);
   return <div id="gjs" />;
 }
