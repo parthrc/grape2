@@ -38,6 +38,14 @@ function App() {
       content: { type: "custom-text-box" },
       category: "React components",
     });
+
+    // add first custom-text-box on first load
+    // also add custom-text-box on after every new component added
+    editor.addComponents({
+      type: "custom-text-box",
+    });
+
+    
   }, []);
   return <div id="gjs" />;
 }
