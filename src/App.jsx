@@ -8,7 +8,8 @@ import ReactCoreGrapesjs from "./grapesjs/core/react-core-grapesjs.jsx";
 import useGrapesjsEditorStore from "./store/GrapesjsEditorStore.jsx";
 
 function App() {
-  const { setGrapesjsEditor } = useGrapesjsEditorStore();
+  const { setGrapesjsEditor, setAvailableBlocks, availableBlocks } =
+    useGrapesjsEditorStore();
   // grapesjs setup
   useEffect(() => {
     const editor = GrapesJS.init({
@@ -60,6 +61,31 @@ function App() {
     editor.addComponents({
       type: "custom-text-box",
     });
+
+    // initialize the slash menu
+    let finalSlashMenuItems = [];
+
+    // using Blocks API
+    // get list of all available blocks
+    const blockManager = editor.Blocks;
+    const allBlocks = blockManager.getBlocksByCategory();
+    // add all blocks to slashMenuItems
+    allBlocks.map((block) => {
+      if (block.category) {
+        if (block.items) {
+          block.items.map((item) => {
+            finalSlashMenuItems.push({
+              label: item.attributes.label,
+              category: "custom-component",
+              component_id: item.attributes.id,
+            });
+          });
+        }
+      }
+    });
+
+    // save finalSlashMenuItems to the zustand store
+    setAvailableBlocks(finalSlashMenuItems);
   }, []);
   return <div id="gjs" />;
 }
