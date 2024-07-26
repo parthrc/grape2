@@ -3,7 +3,7 @@ import StarterKit from "@tiptap/starter-kit";
 import CustomEnterExtension from "./plugins/CustomEnterKeyPlugin.jsx";
 import Placeholder from "@tiptap/extension-placeholder";
 
-const Tiptap = () => {
+const Tiptap = ({ onToggleMenu }) => {
   const tiptapEditor = useEditor({
     extensions: [
       StarterKit,
@@ -19,9 +19,20 @@ const Tiptap = () => {
       },
     },
     autofocus: true,
+    // when editor loses focus
+    onBlur() {
+      onToggleMenu(false);
+    },
     // onUpdate function, runs on every keystroke
     onUpdate({ editor }) {
-      console.log("tiptap updated: ", editor.getText());
+      const text = editor.getText();
+      const lastChar = text.slice(-1);
+      if (lastChar === "/") {
+        onToggleMenu(true);
+      } else {
+        onToggleMenu(false);
+      }
+      console.log("tiptap updated: ", text);
     },
   });
 
