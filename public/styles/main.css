@@ -4,5 +4,15 @@
   color: #848688;
   pointer-events: none;
   height: 0;
-  /* font-size: 100%; */
+}
+
+.customTiptapInput {
+  height: fit-content;
+  padding-inline: 0.5rem;
+  padding-block: 0.2rem;
+  background-color: rgb(253, 248, 249);
+}
+
+.customTiptapInput:focus {
+  outline: none;
 }

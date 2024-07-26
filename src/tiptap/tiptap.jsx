@@ -13,12 +13,15 @@ const Tiptap = () => {
       }),
     ],
     // content: ``,
-
+    editorProps: {
+      attributes: {
+        class: "customTiptapInput",
+      },
+    },
     autofocus: true,
     // onUpdate function, runs on every keystroke
     onUpdate({ editor }) {
       console.log("tiptap updated: ", editor.getText());
-      console.log("Pressed=");
     },
   });
 

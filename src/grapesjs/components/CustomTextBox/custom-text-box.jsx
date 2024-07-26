@@ -4,13 +4,13 @@ import Tiptap from "../../../tiptap/tiptap.jsx";
 const CustomTextBox = () => {
   const styles = {
     container: {
-      border: "2px solid black",
+      border: "1px solid black",
       backgroundColor: "white",
       transition: "background-color 0.3s",
       paddingInline: "10px",
     },
     containerHover: {
-      backgroundColor: "cyan",
+      backgroundColor: "#dfdcdc",
     },
     innerBox: {
       margin: "1px",
