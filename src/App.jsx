@@ -46,6 +46,14 @@ function App() {
       content: { type: "custom-text-box" },
       category: "React components",
     });
+    // add sample-component to Blocks
+    editor.Blocks.add("sample-component", {
+      label: "Sample Component",
+      content: {
+        type: "sample-component",
+      },
+      category: "React components",
+    });
 
     // add first custom-text-box on first load
     // also add custom-text-box on after every new component added

@@ -7,6 +7,7 @@
 import ReactDOM from "react-dom/client";
 import React from "react";
 import CustomTextBox from "../components/CustomTextBox/custom-text-box.jsx";
+import SampleComponent from "../components/SampleComponent.jsx";
 
 const ReactCoreGrapesjs = (editor) => {
   const domc = editor.Components;
@@ -115,6 +116,22 @@ const ReactCoreGrapesjs = (editor) => {
         droppable: true,
         editable: false,
         attributes: { class: "custom-text-box" },
+      },
+    },
+    view: coreReactView,
+  });
+
+  // add sample-component
+  domc.addType("sample-component", {
+    model: {
+      ...coreReactModel,
+      defaults: {
+        component: SampleComponent,
+        tagName: "div",
+        draggable: true,
+        droppable: true,
+        editable: false,
+        attributes: { class: "sample-component" },
       },
     },
     view: coreReactView,
