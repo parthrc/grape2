@@ -2,12 +2,15 @@ import { EditorContent, useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import CustomEnterExtension from "./plugins/CustomEnterKeyPlugin.jsx";
 import Placeholder from "@tiptap/extension-placeholder";
+import useGrapesjsEditorStore from "../store/GrapesjsEditorStore.jsx";
+import { useEffect } from "react";
 
 const Tiptap = ({ onToggleMenu }) => {
+  const { setTiptapEditor, grapesjsEditor } = useGrapesjsEditorStore();
   const tiptapEditor = useEditor({
     extensions: [
       StarterKit,
-      CustomEnterExtension,
+      // CustomEnterExtension,
       Placeholder.configure({
         placeholder: `start typing or use "/" for commands...`,
       }),
@@ -22,6 +25,8 @@ const Tiptap = ({ onToggleMenu }) => {
     // when editor loses focus
     onBlur() {
       onToggleMenu(false);
+      // add new custom-text-box onBlur
+      // grapesjsEditor.addComponents({ type: "custom-text-box" });
     },
     // onUpdate function, runs on every keystroke
     onUpdate({ editor }) {
@@ -35,6 +40,13 @@ const Tiptap = ({ onToggleMenu }) => {
       console.log("tiptap updated: ", text);
     },
   });
+
+  // set tiptapEditor isnatnce to zustand
+  useEffect(() => {
+    if (tiptapEditor) {
+      setTiptapEditor(tiptapEditor);
+    }
+  }, [tiptapEditor, setTiptapEditor]);
 
   return <EditorContent editor={tiptapEditor} />;
 };

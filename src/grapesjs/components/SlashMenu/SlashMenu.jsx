@@ -3,7 +3,7 @@ import useGrapesjsEditorStore from "../../../store/GrapesjsEditorStore.jsx";
 
 const SlashMenu = () => {
   // get all blocks
-  const { availableBlocks, editor } = useGrapesjsEditorStore();
+  const { availableBlocks, grapesjsEditor } = useGrapesjsEditorStore();
 
   //ahndler
   const handleOnClickSlashMenuItem = (block) => {
@@ -13,7 +13,7 @@ const SlashMenu = () => {
     if (block.category === "custom-component") {
       // Create a JSX component from the component ID
       const jsxComponent = React.createElement(block.component_id);
-      editor.addComponents(jsxComponent);
+      grapesjsEditor.addComponents(jsxComponent);
     }
   };
 
