@@ -6,6 +6,7 @@ import { useEffect } from "react";
 import gjsPresetWebpagePlugin from "grapesjs-preset-webpage";
 import ReactCoreGrapesjs from "./grapesjs/core/react-core-grapesjs.jsx";
 import useGrapesjsEditorStore from "./store/GrapesjsEditorStore.jsx";
+import FloatingPagesSidebar from "./grapesjs/components/FloatingPagesSidebar/FloatingPagesSidebar.jsx";
 
 function App() {
   const { setGrapesjsEditor, setAvailableBlocks, availableBlocks } =
@@ -86,8 +87,54 @@ function App() {
 
     // save finalSlashMenuItems to the zustand store
     setAvailableBlocks(finalSlashMenuItems);
+
+    // add a new page
+    // Get the Pages module first
+    const pages = editor.Pages;
+
+    // Get an array of all pages
+    const allPages = pages.getAll();
+
+    // Get currently selected page
+    const selectedPage = pages.getSelected();
+
+    // Add a new Page
+    const newPage = pages.add({
+      id: "new-page-id",
+      styles: ".my-class { color: red }",
+      component: '<div class="my-class">My element</div>',
+    });
+
+    // Get the Page by ID
+    const page = pages.get("new-page-id");
+    console.log("page id", page);
+
+    console.log(pages.getAll());
+
+    // Get the HTML/CSS code from the page component
+    const component = page.getMainComponent();
+    const htmlPage = editor.getHtml({ component });
+    const cssPage = editor.getCss({ component });
+
+    // try adding new page to the canvas
+    editor.addComponents(component);
   }, []);
-  return <div id="gjs" />;
+  return (
+    <div>
+      {/* Floating pages sidebar */}
+      <div
+        style={{
+          position: "fixed",
+          left: "10px",
+          top: "48%",
+          zIndex: "999",
+        }}
+      >
+        <FloatingPagesSidebar />
+      </div>
+      <div id="gjs" />;
+    </div>
+  );
 }
 
 export default App;
