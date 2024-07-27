@@ -64,7 +64,10 @@ function App() {
     });
 
     // initialize the slash menu
-    let finalSlashMenuItems = [];
+    let finalSlashMenuItems = [
+      { label: "bullet", type: "rte" },
+      { label: "h1", type: "rte" },
+    ];
 
     // using Blocks API
     // get list of all available blocks

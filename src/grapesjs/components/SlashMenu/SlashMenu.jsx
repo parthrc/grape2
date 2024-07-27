@@ -1,7 +1,7 @@
 import React from "react";
 import useGrapesjsEditorStore from "../../../store/GrapesjsEditorStore.jsx";
 
-const SlashMenu = () => {
+const SlashMenu = ({ handleMenuAction }) => {
   // get all blocks
   const { availableBlocks, grapesjsEditor } = useGrapesjsEditorStore();
 
@@ -14,6 +14,11 @@ const SlashMenu = () => {
       // Create a JSX component from the component ID
       const jsxComponent = React.createElement(block.component_id);
       grapesjsEditor.addComponents(jsxComponent);
+    }
+
+    // if tiptap menu item
+    if (block.type === "rte") {
+      handleMenuAction(block.label);
     }
   };
 

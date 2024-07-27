@@ -71,7 +71,7 @@ const CustomTextBox = () => {
       </div>
       {showMenu && (
         <div ref={slashMenuRef}>
-          <SlashMenu />
+          <SlashMenu handleMenuAction={handleMenuAction} />
         </div>
       )}
     </div>
