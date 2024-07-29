@@ -1,8 +1,6 @@
 import "./App.css";
-
-import "grapesjs/dist/css/grapes.min.css";
+import GjsEditor, { Canvas } from "@grapesjs/react";
 import GrapesJS from "grapesjs";
-import { useEffect } from "react";
 import gjsPresetWebpagePlugin from "grapesjs-preset-webpage";
 import ReactCoreGrapesjs from "./grapesjs/core/react-core-grapesjs.jsx";
 import useGrapesjsEditorStore from "./store/GrapesjsEditorStore.jsx";
@@ -11,32 +9,10 @@ import FloatingPagesSidebar from "./grapesjs/components/FloatingPagesSidebar/Flo
 function App() {
   const { setGrapesjsEditor, setAvailableBlocks, availableBlocks } =
     useGrapesjsEditorStore();
-  // grapesjs setup
-  useEffect(() => {
-    const editor = GrapesJS.init({
-      container: "#gjs",
-      fromElement: true,
-      showOffsets: true,
-      noticeOnUnload: false,
-      storageManager: false,
-      // plugins here
-      plugins: [gjsPresetWebpagePlugin, ReactCoreGrapesjs],
 
-      // to apply styles to individual components
-      selectorManager: {
-        componentFirst: true,
-      },
-      canvas: {
-        styles: ["styles/main.css"],
-      },
-
-      parser: {
-        optionsHtml: {
-          allowScripts: true,
-        },
-      },
-    });
-
+  // callback called once editor is initalized
+  const onEditor = (editor) => {
+    console.log("Editor loaded", { editor });
     // set editor isntance to zustand store
     if (editor) setGrapesjsEditor(editor);
 
@@ -121,7 +97,8 @@ function App() {
 
     // try adding new page to the canvas
     editor.addComponents(component);
-  }, []);
+  };
+
   return (
     <div>
       {/* Floating pages sidebar */}
@@ -135,7 +112,22 @@ function App() {
       >
         <FloatingPagesSidebar />
       </div>
-      <div id="gjs" />;
+      <GjsEditor
+        grapesjs={GrapesJS}
+        grapesjsCss="https://unpkg.com/grapesjs/dist/css/grapes.min.css"
+        plugins={[gjsPresetWebpagePlugin, ReactCoreGrapesjs]}
+        onEditor={onEditor}
+        options={{
+          height: "100vh",
+          storageManager: false,
+          selectorManager: true,
+          parser: {
+            optionsHtml: {
+              allowScripts: true,
+            },
+          },
+        }}
+      ></GjsEditor>
     </div>
   );
 }
