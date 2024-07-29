@@ -35,9 +35,9 @@ function App() {
 
     // add first custom-text-box on first load
     // also add custom-text-box on after every new component added
-    editor.addComponents({
-      type: "custom-text-box",
-    });
+    // editor.addComponents({
+    //   type: "custom-text-box",
+    // });
 
     // initialize the slash menu
     let finalSlashMenuItems = [
@@ -69,34 +69,32 @@ function App() {
 
     // add a new page
     // Get the Pages module first
-    const pages = editor.Pages;
+    // const pages = editor.Pages;
 
-    // Get an array of all pages
-    const allPages = pages.getAll();
+    // // Get an array of all pages
+    // const allPages = pages.getAll();
 
-    // Get currently selected page
-    const selectedPage = pages.getSelected();
+    // // Get currently selected page
+    // const selectedPage = pages.getSelected();
 
-    // Add a new Page
-    const newPage = pages.add({
-      id: "new-page-id",
-      styles: ".my-class { color: red }",
-      component: '<div class="my-class">My element</div>',
-    });
+    // // Add a new Page
+    // const newPage = pages.add({
+    //   id: "new-page-id",
+    //   styles: ".my-class { backgroundColor: red }",
+    //   component: '<div class="my-class">My element</div>',
+    // });
 
-    // Get the Page by ID
-    const page = pages.get("new-page-id");
-    console.log("page id", page);
+    // // Get the Page by ID
+    // const page = pages.get("kb6OByu3fOh2330D");
+    // console.log("page id", page);
 
-    console.log(pages.getAll());
+    // console.log("All pages:", pages.getAll());
 
-    // Get the HTML/CSS code from the page component
-    const component = page.getMainComponent();
-    const htmlPage = editor.getHtml({ component });
-    const cssPage = editor.getCss({ component });
+    // selectedPage.addComponents({
+    //   type: "custom-text-box",
+    // });
 
-    // try adding new page to the canvas
-    editor.addComponents(component);
+    // console.log("All pages:", pages.getAll());
   };
 
   return (
