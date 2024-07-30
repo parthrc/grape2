@@ -1,5 +1,5 @@
 import "./App.css";
-import GjsEditor, { Canvas } from "@grapesjs/react";
+import GjsEditor, { Canvas, PagesProvider } from "@grapesjs/react";
 import GrapesJS from "grapesjs";
 import gjsPresetWebpagePlugin from "grapesjs-preset-webpage";
 import ReactCoreGrapesjs from "./grapesjs/core/react-core-grapesjs.jsx";
@@ -99,17 +99,7 @@ function App() {
 
   return (
     <div>
-      {/* Floating pages sidebar */}
-      <div
-        style={{
-          position: "fixed",
-          left: "10px",
-          top: "48%",
-          zIndex: "999",
-        }}
-      >
-        <FloatingPagesSidebar />
-      </div>
+      {/* Main editor component */}
       <GjsEditor
         grapesjs={GrapesJS}
         grapesjsCss="https://unpkg.com/grapesjs/dist/css/grapes.min.css"
@@ -125,7 +115,25 @@ function App() {
             },
           },
         }}
-      ></GjsEditor>
+      >
+        {/* Floating pages sidebar */}
+        <div
+          style={{
+            position: "fixed",
+            left: "10px",
+            top: "48%",
+            zIndex: "999",
+          }}
+        >
+          {/* Pass the floating sidebar along with the PagesProvider */}
+          <PagesProvider>
+            {(props) => <FloatingPagesSidebar {...props} />}
+          </PagesProvider>
+        </div>
+        <div style={{ display: "flex", flexDirection: "row" }}>
+          <Canvas style={{ width: "100%", height: "100%" }} />
+        </div>
+      </GjsEditor>
     </div>
   );
 }

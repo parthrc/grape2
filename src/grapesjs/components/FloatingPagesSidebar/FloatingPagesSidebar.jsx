@@ -29,8 +29,9 @@ const styles = {
   },
 };
 
-const FloatingPagesSidebar = () => {
+const FloatingPagesSidebar = ({ pages, selected, add, select, remove }) => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  console.log("Pages=", pages[0]);
 
   const handleToggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
@@ -49,6 +50,10 @@ const FloatingPagesSidebar = () => {
             X
           </div>
           <div>Sidebar</div>
+          {pages &&
+            pages.map((page, index) => {
+              return <div key={index}>{page.getName() + "a"}</div>;
+            })}
         </div>
       )}
     </div>
