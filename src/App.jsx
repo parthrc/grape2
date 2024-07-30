@@ -5,10 +5,16 @@ import gjsPresetWebpagePlugin from "grapesjs-preset-webpage";
 import ReactCoreGrapesjs from "./grapesjs/core/react-core-grapesjs.jsx";
 import useGrapesjsEditorStore from "./store/GrapesjsEditorStore.jsx";
 import FloatingPagesSidebar from "./grapesjs/components/FloatingPagesSidebar/FloatingPagesSidebar.jsx";
+import { useEffect } from "react";
 
 function App() {
-  const { setGrapesjsEditor, setAvailableBlocks, availableBlocks } =
-    useGrapesjsEditorStore();
+  const {
+    setGrapesjsEditor,
+    setAvailableBlocks,
+    availableBlocks,
+    grapesjsEditor,
+    pages,
+  } = useGrapesjsEditorStore();
 
   // callback called once editor is initalized
   const onEditor = (editor) => {
@@ -29,6 +35,14 @@ function App() {
       label: "Sample Component",
       content: {
         type: "sample-component",
+      },
+      category: "React components",
+    });
+    // add custom-divieder to Blocks
+    editor.Blocks.add("custom-divider", {
+      label: "Custom Divider",
+      content: {
+        type: "custom-divider",
       },
       category: "React components",
     });
@@ -63,24 +77,34 @@ function App() {
 
     // PAGES section
     // we need to programmatically render the canvas
-    // demo pages
-    const pages = [
-      "<div>Page 1 content</div>",
-      "<div>Page 2 content</div>",
-      "<div>Page 3 content</div>",
-    ];
-
-    // Programmatically add pages and dividers to the canvas
-    pages.forEach((pageContent, index) => {
-      // Add the page content
-      editor.addComponents(pageContent);
-
-      editor.addComponents({
-        type: "custom-divider",
-      });
-    });
   };
 
+  // useEffect to render all apges in teh canvas
+  useEffect(() => {
+    const editor = grapesjsEditor;
+
+    if (editor && pages.length > 0) {
+      const domComponents = editor.DomComponents;
+      domComponents.clear();
+
+      pages.forEach((page, index) => {
+        domComponents.addComponent({
+          type: "custom-page",
+          components: [
+            {
+              type: "text",
+              content: page.content,
+            },
+          ],
+        });
+
+        domComponents.addComponent({ type: "custom-divider" });
+      });
+    } else if (editor) {
+      const domComponents = editor.DomComponents;
+      domComponents.addComponent({ type: "custom-divider" });
+    }
+  }, [pages, grapesjsEditor]);
   return (
     <div>
       {/* Main editor component */}

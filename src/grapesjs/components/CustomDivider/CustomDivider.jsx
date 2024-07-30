@@ -2,14 +2,25 @@ import { FaPlus } from "react-icons/fa";
 import { FaWandMagicSparkles } from "react-icons/fa6";
 import { FaChevronDown } from "react-icons/fa";
 import useGrapesjsEditorStore from "../../../store/GrapesjsEditorStore.jsx";
-const CustomDivider = () => {
-  const { grapesjsEditor } = useGrapesjsEditorStore();
+import { v4 as uuidv4 } from "uuid";
 
-  // add new Page
+const CustomDivider = () => {
+  const { grapesjsEditor, addPage } = useGrapesjsEditorStore();
+
   const handleAddNewPage = () => {
-    const newPageContent = "<div>New Page Content</div>";
-    grapesjsEditor.addComponents({ type: "custom-text-box" });
+    const newPageId = uuidv4();
+    const newPageContent = `<div>New Page Content for ${newPageId}</div>`;
+    const pageManager = grapesjsEditor.Pages;
+
+    pageManager.add({
+      id: newPageId,
+      styles: `.my-class { color: red }`,
+      component: `<div class="my-class">${newPageContent}</div>`,
+    });
+
+    addPage({ id: newPageId, content: newPageContent });
   };
+
   return (
     <div
       style={{

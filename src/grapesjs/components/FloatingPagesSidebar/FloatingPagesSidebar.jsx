@@ -33,7 +33,8 @@ const FloatingPagesSidebar = ({ pages, selected, add, select, remove }) => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   const handleToggleSidebar = () => {
-    setIsSidebarOpen(!isSidebarOpen);
+    // setIsSidebarOpen(!isSidebarOpen);
+    console.log("All pages: ", pages);
   };
 
   return (

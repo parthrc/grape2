@@ -9,6 +9,7 @@ import React from "react";
 import CustomTextBox from "../components/CustomTextBox/custom-text-box.jsx";
 import SampleComponent from "../components/SampleComponent/SampleComponent.jsx";
 import CustomDivider from "../components/CustomDivider/CustomDivider.jsx";
+import CustomPageComponent from "../components/CustomPageComponent/CustomPageComponent.jsx";
 
 const ReactCoreGrapesjs = (editor) => {
   const domc = editor.Components;
@@ -148,6 +149,21 @@ const ReactCoreGrapesjs = (editor) => {
         droppable: true,
         editable: false,
         attributes: { class: "custom-divider" },
+      },
+    },
+    view: coreReactView,
+  });
+
+  // add custom page
+  domc.addType("custom-page", {
+    model: {
+      ...coreReactModel,
+      defaults: {
+        component: CustomPageComponent,
+        draggable: true,
+        droppable: true,
+        editable: false,
+        attributes: { class: "custom-page" },
       },
     },
     view: coreReactView,

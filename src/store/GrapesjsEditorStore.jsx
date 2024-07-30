@@ -7,6 +7,9 @@ const useGrapesjsEditorStore = create((set) => ({
   setAvailableBlocks: (blocks) => set({ availableBlocks: blocks }),
   tiptapEditor: null,
   setTiptapEditor: (editor) => set({ tiptapEditor: editor }),
+  pages: [],
+  setPages: (pages) => set({ pages }),
+  addPage: (page) => set((state) => ({ pages: [...state.pages, page] })),
 }));
 
 export default useGrapesjsEditorStore;
