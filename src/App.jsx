@@ -33,12 +33,6 @@ function App() {
       category: "React components",
     });
 
-    // add first custom-text-box on first load
-    // also add custom-text-box on after every new component added
-    // editor.addComponents({
-    //   type: "custom-text-box",
-    // });
-
     // initialize the slash menu
     let finalSlashMenuItems = [
       { label: "bullet", type: "rte" },
@@ -67,34 +61,24 @@ function App() {
     // save finalSlashMenuItems to the zustand store
     setAvailableBlocks(finalSlashMenuItems);
 
-    // add a new page
-    // Get the Pages module first
-    // const pages = editor.Pages;
+    // PAGES section
+    // we need to programmatically render the canvas
+    // demo pages
+    const pages = [
+      "<div>Page 1 content</div>",
+      "<div>Page 2 content</div>",
+      "<div>Page 3 content</div>",
+    ];
 
-    // // Get an array of all pages
-    // const allPages = pages.getAll();
+    // Programmatically add pages and dividers to the canvas
+    pages.forEach((pageContent, index) => {
+      // Add the page content
+      editor.addComponents(pageContent);
 
-    // // Get currently selected page
-    // const selectedPage = pages.getSelected();
-
-    // // Add a new Page
-    // const newPage = pages.add({
-    //   id: "new-page-id",
-    //   styles: ".my-class { backgroundColor: red }",
-    //   component: '<div class="my-class">My element</div>',
-    // });
-
-    // // Get the Page by ID
-    // const page = pages.get("kb6OByu3fOh2330D");
-    // console.log("page id", page);
-
-    // console.log("All pages:", pages.getAll());
-
-    // selectedPage.addComponents({
-    //   type: "custom-text-box",
-    // });
-
-    // console.log("All pages:", pages.getAll());
+      editor.addComponents({
+        type: "custom-divider",
+      });
+    });
   };
 
   return (
@@ -103,9 +87,17 @@ function App() {
       <GjsEditor
         grapesjs={GrapesJS}
         grapesjsCss="https://unpkg.com/grapesjs/dist/css/grapes.min.css"
-        plugins={[gjsPresetWebpagePlugin, ReactCoreGrapesjs]}
+        plugins={[
+          {
+            id: "gjs-blocks-basic",
+            src: "https://unpkg.com/grapesjs-blocks-basic",
+          },
+
+          ReactCoreGrapesjs,
+        ]}
         onEditor={onEditor}
         options={{
+          fromElement: true,
           height: "100vh",
           storageManager: false,
           selectorManager: true,
@@ -116,23 +108,25 @@ function App() {
           },
         }}
       >
-        {/* Floating pages sidebar */}
-        <div
-          style={{
-            position: "fixed",
-            left: "10px",
-            top: "48%",
-            zIndex: "999",
-          }}
-        >
-          {/* Pass the floating sidebar along with the PagesProvider */}
-          <PagesProvider>
-            {(props) => <FloatingPagesSidebar {...props} />}
-          </PagesProvider>
-        </div>
-        <div style={{ display: "flex", flexDirection: "row" }}>
-          <Canvas style={{ width: "100%", height: "100%" }} />
-        </div>
+        <PagesProvider>
+          {(props) => (
+            <>
+              <div
+                style={{
+                  position: "fixed",
+                  left: "10px",
+                  top: "48%",
+                  zIndex: "999999",
+                }}
+              >
+                <FloatingPagesSidebar {...props} />
+              </div>
+              <div style={{ marginTop: "30px" }}>
+                <Canvas />
+              </div>
+            </>
+          )}
+        </PagesProvider>
       </GjsEditor>
     </div>
   );
