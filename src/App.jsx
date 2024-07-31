@@ -1,7 +1,6 @@
 import "./App.css";
 import GjsEditor, { Canvas, PagesProvider } from "@grapesjs/react";
 import GrapesJS from "grapesjs";
-import gjsPresetWebpagePlugin from "grapesjs-preset-webpage";
 import ReactCoreGrapesjs from "./grapesjs/core/react-core-grapesjs.jsx";
 import useGrapesjsEditorStore from "./store/GrapesjsEditorStore.jsx";
 import FloatingPagesSidebar from "./grapesjs/components/FloatingPagesSidebar/FloatingPagesSidebar.jsx";
@@ -13,7 +12,8 @@ function App() {
     setAvailableBlocks,
     availableBlocks,
     grapesjsEditor,
-    pages,
+    canvasPages,
+    setCanvasPages,
   } = useGrapesjsEditorStore();
 
   // callback called once editor is initalized
@@ -82,12 +82,17 @@ function App() {
   // useEffect to render all apges in teh canvas
   useEffect(() => {
     const editor = grapesjsEditor;
-
-    if (editor && pages.length > 0) {
+    // check if editor instance exists
+    // check if there are pages in the canvas
+    if (editor && canvasPages.length > 0) {
+      // clear any components
+      // because we will render all ourselves
       const domComponents = editor.DomComponents;
       domComponents.clear();
-
-      pages.forEach((page, index) => {
+      // loop through all pages store in zustand store
+      canvasPages.forEach((page, index) => {
+        // for each page add custom-page component
+        // with all its children
         domComponents.addComponent({
           type: "custom-page",
           components: [
@@ -98,13 +103,16 @@ function App() {
           ],
         });
 
+        // add custom divider after end of each page
         domComponents.addComponent({ type: "custom-divider" });
       });
-    } else if (editor) {
+    }
+    // if canavs is empty just who one custom divider
+    else if (editor) {
       const domComponents = editor.DomComponents;
       domComponents.addComponent({ type: "custom-divider" });
     }
-  }, [pages, grapesjsEditor]);
+  }, [canvasPages, grapesjsEditor]);
   return (
     <div>
       {/* Main editor component */}
@@ -139,7 +147,8 @@ function App() {
                 style={{
                   position: "fixed",
                   left: "10px",
-                  top: "48%",
+                  top: "50%",
+                  transform: "translateY(-50%)",
                   zIndex: "999999",
                 }}
               >

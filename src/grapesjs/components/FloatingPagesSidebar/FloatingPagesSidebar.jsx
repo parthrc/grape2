@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { FiFilm } from "react-icons/fi";
+import useGrapesjsEditorStore from "../../../store/GrapesjsEditorStore.jsx";
 
 const styles = {
   container: {
@@ -27,14 +28,33 @@ const styles = {
     borderRadius: "10px",
     boxShadow: "2px 2px rgba(0, 0, 0, 0.1)",
   },
+  pagesOverviewContainer: {
+    border: "1px solid blue",
+    padding: "0.5rem",
+    display: "flex",
+    flexDirection: "column",
+    gap: "0.3rem",
+  },
+  pagesOverviewItem: {
+    border: "2px solid red",
+    padding: "0.5rem",
+  },
 };
 
 const FloatingPagesSidebar = ({ pages, selected, add, select, remove }) => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const { grapesjsEditor, canvasPages } = useGrapesjsEditorStore();
 
   const handleToggleSidebar = () => {
-    // setIsSidebarOpen(!isSidebarOpen);
-    console.log("All pages: ", pages);
+    setIsSidebarOpen(!isSidebarOpen);
+    // const json = grapesjsEditor.getComponents();
+    // const projectData = grapesjsEditor.getProjectData();
+    // console.log("canvasPages: ", canvasPages);
+
+    // // looping
+    // canvasPages.map((model, index) => {
+    //   console.log(index, "=", model);
+    // });
   };
 
   return (
@@ -49,11 +69,20 @@ const FloatingPagesSidebar = ({ pages, selected, add, select, remove }) => {
           <div onClick={handleToggleSidebar} style={styles.xBtn}>
             X
           </div>
-          <div>Sidebar</div>
-          {pages &&
-            pages.map((page, index) => {
-              return <div key={index}>{page.getName() + "a"}</div>;
-            })}
+
+          {canvasPages.length === 0 && <div>No pages yet</div>}
+          {canvasPages.length > 0 && (
+            <div style={styles.pagesOverviewContainer}>
+              {canvasPages.map((page) => {
+                console.log(page);
+                return (
+                  <div key={page.id} style={styles.pagesOverviewItem}>
+                    {page.id}
+                  </div>
+                );
+              })}
+            </div>
+          )}
         </div>
       )}
     </div>

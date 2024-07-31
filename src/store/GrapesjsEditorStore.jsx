@@ -7,9 +7,14 @@ const useGrapesjsEditorStore = create((set) => ({
   setAvailableBlocks: (blocks) => set({ availableBlocks: blocks }),
   tiptapEditor: null,
   setTiptapEditor: (editor) => set({ tiptapEditor: editor }),
-  pages: [],
-  setPages: (pages) => set({ pages }),
-  addPage: (page) => set((state) => ({ pages: [...state.pages, page] })),
+  // List of pages in the canvas
+  canvasPages: [],
+  setCanvasPages: (canvasPages) => set({ canvasPages }),
+  addCanvasPage: (page) =>
+    set((state) => ({ canvasPages: [...state.canvasPages, page] })),
+
+  // canvasList: [],
+  // setCanvasList: (canvasList) => set({ canvasList }),
 }));
 
 export default useGrapesjsEditorStore;

@@ -5,7 +5,8 @@ import useGrapesjsEditorStore from "../../../store/GrapesjsEditorStore.jsx";
 import { v4 as uuidv4 } from "uuid";
 
 const CustomDivider = () => {
-  const { grapesjsEditor, addPage } = useGrapesjsEditorStore();
+  const { grapesjsEditor, addCanvasPage, canvasPages } =
+    useGrapesjsEditorStore();
 
   const handleAddNewPage = () => {
     const newPageId = uuidv4();
@@ -18,7 +19,10 @@ const CustomDivider = () => {
       component: `<div class="my-class">${newPageContent}</div>`,
     });
 
-    addPage({ id: newPageId, content: newPageContent });
+    addCanvasPage({
+      id: canvasPages.length + 1,
+      content: newPageContent,
+    });
   };
 
   return (
