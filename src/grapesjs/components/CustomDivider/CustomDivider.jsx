@@ -13,11 +13,11 @@ const CustomDivider = () => {
     const newPageContent = `<div>New Page Content for ${newPageId}</div>`;
     const pageManager = grapesjsEditor.Pages;
     // add new page to pageManager
-    pageManager.add({
-      id: newPageId,
-      styles: `.my-class { color: red }`,
-      component: `<div class="my-class">${newPageContent}</div>`,
-    });
+    // pageManager.add({
+    //   id: newPageId,
+    //   styles: `.my-class { color: red }`,
+    //   component: `<div class="my-class">${newPageContent}</div>`,
+    // });
     // add new page to our zustand store
     addCanvasPage({
       id: canvasPages.length + 1,

@@ -95,6 +95,9 @@ function App() {
         // with all its children
         domComponents.addComponent({
           type: "custom-page",
+          props: {
+            content: page.id,
+          },
           components: [
             {
               type: "text",
