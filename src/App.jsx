@@ -132,7 +132,10 @@ function App() {
           fromElement: true,
           height: "100vh",
           storageManager: false,
-          selectorManager: true,
+          // to style individual compoenents
+          selectorManager: {
+            componentFirst: true,
+          },
           parser: {
             optionsHtml: {
               allowScripts: true,
