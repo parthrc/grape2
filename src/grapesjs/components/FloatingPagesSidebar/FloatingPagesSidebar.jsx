@@ -93,6 +93,7 @@ const FloatingPagesSidebar = ({ pages, selected, add, select, remove }) => {
 
   // callback when drag event starts
   function onDragStart(event) {
+    console.log("drag start");
     // check if drag event is "PageSidebarItem"
     // useful if in future, we add other draggable elements
     if (event.active.data.current?.type === "PageSidebarItem") {
@@ -133,24 +134,20 @@ const FloatingPagesSidebar = ({ pages, selected, add, select, remove }) => {
     // Case 3: let on other spot
     //Swap places in our columns state of the columns
     console.log("Now running setCanvasPages");
-    setCanvasPages(() => {
-      console.log("set canavs inside drag end fired");
+    //find index of currently dragged element in our STATE canvasPages
+    const activeItemIndex = canvasPages.findIndex(
+      (page) => page.id === activeSidebarItemId
+    );
+    // find index of the current over item in canvasPages
+    const activeOverIndex = canvasPages.findIndex(
+      (page) => page.id === activeOverItemId
+    );
+    //arrayMove is dnd-kit function which is used to swap places of two elements in an array
+    console.log("canvasPages before arrayMove", canvasPages);
+    const final = arrayMove(canvasPages, activeItemIndex, activeOverIndex);
+    console.log("Final", final);
 
-      //find index of currently dragged element in our STATE canvasPages
-      const activeItemIndex = canvasPages.findIndex(
-        (page) => page.id === activeSidebarItemId
-      );
-      // find index of the current over item in canvasPages
-      const activeOverIndex = canvasPages.findIndex(
-        (page) => page.id === activeOverItemId
-      );
-      //arrayMove is dnd-kit function which is used to swap places of two elements in an array
-      console.log("canvasPages before arrayMove", canvasPages);
-      const final = arrayMove(canvasPages, activeItemIndex, activeOverIndex);
-      console.log("Final", final);
-
-      return final;
-    });
+    setCanvasPages(final);
     console.log("Last return");
     return;
   }

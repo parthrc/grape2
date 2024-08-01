@@ -1,5 +1,3 @@
-import { v4 as uuidv4 } from "uuid";
-
 const CustomPageComponent = ({ content }) => {
   return (
     <div
@@ -9,7 +7,7 @@ const CustomPageComponent = ({ content }) => {
         padding: "5px",
       }}
     >
-      Custom page - {uuidv4()}
+      Custom page - {content}
     </div>
   );
 };
