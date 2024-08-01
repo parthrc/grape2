@@ -2,3 +2,9 @@
   margin: 0;
   padding: 0;
 }
+
+.custom-divider {
+  height: 20px;
+  background: #ccc;
+  margin: 20px 0;
+}

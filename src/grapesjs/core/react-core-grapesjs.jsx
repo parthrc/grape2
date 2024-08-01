@@ -1,13 +1,9 @@
-/**
- * This file contains the custom graespsjs component to render a react Component
- * It contains the model and view definitions for the same
- * When we create a custom react component, we extend this model, and use this view.
- */
-
 import ReactDOM from "react-dom/client";
 import React from "react";
 import CustomTextBox from "../components/CustomTextBox/custom-text-box.jsx";
 import SampleComponent from "../components/SampleComponent/SampleComponent.jsx";
+import CustomDivider from "../components/CustomDivider/CustomDivider.jsx";
+import CustomPageComponent from "../components/CustomPageComponent/CustomPageComponent.jsx";
 
 const ReactCoreGrapesjs = (editor) => {
   const domc = editor.Components;
@@ -36,7 +32,7 @@ const ReactCoreGrapesjs = (editor) => {
 
     init() {
       const { model } = this;
-      this.listenTo(model, "change:attributes", this.render);
+      this.listenTo(model, "change:attributes change:props", this.render);
       this.listenTo(model.components(), "add remove reset", this.__upRender);
     },
 
@@ -69,6 +65,7 @@ const ReactCoreGrapesjs = (editor) => {
       this.renderChildren();
       const reactEl = this.createReactEl(model.get("component"), {
         ...model.get("attributes"),
+        ...model.get("props"),
       });
       this.mountReact(reactEl, el);
       this.__renderChildComponents(el);
@@ -103,8 +100,6 @@ const ReactCoreGrapesjs = (editor) => {
     view: coreReactView,
   });
 
-  // Add more custom component types below...
-
   // Add custom text box type
   domc.addType("custom-text-box", {
     model: {
@@ -116,12 +111,13 @@ const ReactCoreGrapesjs = (editor) => {
         droppable: true,
         editable: false,
         attributes: { class: "custom-text-box" },
+        props: {}, // Add this line to define custom props
       },
     },
     view: coreReactView,
   });
 
-  // add sample-component
+  // Add sample-component
   domc.addType("sample-component", {
     model: {
       ...coreReactModel,
@@ -132,6 +128,39 @@ const ReactCoreGrapesjs = (editor) => {
         droppable: true,
         editable: false,
         attributes: { class: "sample-component" },
+        props: {}, // Add this line to define custom props
+      },
+    },
+    view: coreReactView,
+  });
+
+  // Add custom divider
+  domc.addType("custom-divider", {
+    model: {
+      ...coreReactModel,
+      defaults: {
+        component: CustomDivider,
+        draggable: true,
+        droppable: true,
+        editable: false,
+        attributes: { class: "custom-divider" },
+        props: {}, // Add this line to define custom props
+      },
+    },
+    view: coreReactView,
+  });
+
+  // Add custom page
+  domc.addType("custom-page", {
+    model: {
+      ...coreReactModel,
+      defaults: {
+        component: CustomPageComponent,
+        draggable: true,
+        droppable: true,
+        editable: false,
+        attributes: { class: "custom-page" },
+        props: { content: "Default Content" }, // Add this line to define custom props
       },
     },
     view: coreReactView,

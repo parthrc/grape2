@@ -1,42 +1,24 @@
 import "./App.css";
-
-import "grapesjs/dist/css/grapes.min.css";
+import GjsEditor, { Canvas, PagesProvider } from "@grapesjs/react";
 import GrapesJS from "grapesjs";
-import { useEffect } from "react";
-import gjsPresetWebpagePlugin from "grapesjs-preset-webpage";
 import ReactCoreGrapesjs from "./grapesjs/core/react-core-grapesjs.jsx";
 import useGrapesjsEditorStore from "./store/GrapesjsEditorStore.jsx";
 import FloatingPagesSidebar from "./grapesjs/components/FloatingPagesSidebar/FloatingPagesSidebar.jsx";
+import { useEffect } from "react";
 
 function App() {
-  const { setGrapesjsEditor, setAvailableBlocks, availableBlocks } =
-    useGrapesjsEditorStore();
-  // grapesjs setup
-  useEffect(() => {
-    const editor = GrapesJS.init({
-      container: "#gjs",
-      fromElement: true,
-      showOffsets: true,
-      noticeOnUnload: false,
-      storageManager: false,
-      // plugins here
-      plugins: [gjsPresetWebpagePlugin, ReactCoreGrapesjs],
+  const {
+    setGrapesjsEditor,
+    setAvailableBlocks,
+    availableBlocks,
+    grapesjsEditor,
+    canvasPages,
+    setCanvasPages,
+  } = useGrapesjsEditorStore();
 
-      // to apply styles to individual components
-      selectorManager: {
-        componentFirst: true,
-      },
-      canvas: {
-        styles: ["styles/main.css"],
-      },
-
-      parser: {
-        optionsHtml: {
-          allowScripts: true,
-        },
-      },
-    });
-
+  // callback called once editor is initalized
+  const onEditor = (editor) => {
+    console.log("Editor loaded", { editor });
     // set editor isntance to zustand store
     if (editor) setGrapesjsEditor(editor);
 
@@ -56,11 +38,13 @@ function App() {
       },
       category: "React components",
     });
-
-    // add first custom-text-box on first load
-    // also add custom-text-box on after every new component added
-    editor.addComponents({
-      type: "custom-text-box",
+    // add custom-divieder to Blocks
+    editor.Blocks.add("custom-divider", {
+      label: "Custom Divider",
+      content: {
+        type: "custom-divider",
+      },
+      category: "React components",
     });
 
     // initialize the slash menu
@@ -91,51 +75,98 @@ function App() {
     // save finalSlashMenuItems to the zustand store
     setAvailableBlocks(finalSlashMenuItems);
 
-    // add a new page
-    // Get the Pages module first
-    const pages = editor.Pages;
+    // PAGES section
+    // we need to programmatically render the canvas
+  };
 
-    // Get an array of all pages
-    const allPages = pages.getAll();
+  // useEffect to render all apges in teh canvas
+  useEffect(() => {
+    const editor = grapesjsEditor;
+    // check if editor instance exists
+    // check if there are pages in the canvas
+    if (editor && canvasPages.length > 0) {
+      // clear any components
+      // because we will render all ourselves
+      const domComponents = editor.DomComponents;
+      domComponents.clear();
+      // loop through all pages store in zustand store
+      canvasPages.forEach((page, index) => {
+        // for each page add custom-page component
+        // with all its children
+        domComponents.addComponent({
+          type: "custom-page",
+          props: {
+            content: page.id,
+          },
+          components: [
+            {
+              type: "text",
+              content: page.content,
+            },
+          ],
+        });
 
-    // Get currently selected page
-    const selectedPage = pages.getSelected();
-
-    // Add a new Page
-    const newPage = pages.add({
-      id: "new-page-id",
-      styles: ".my-class { color: red }",
-      component: '<div class="my-class">My element</div>',
-    });
-
-    // Get the Page by ID
-    const page = pages.get("new-page-id");
-    console.log("page id", page);
-
-    console.log(pages.getAll());
-
-    // Get the HTML/CSS code from the page component
-    const component = page.getMainComponent();
-    const htmlPage = editor.getHtml({ component });
-    const cssPage = editor.getCss({ component });
-
-    // try adding new page to the canvas
-    editor.addComponents(component);
-  }, []);
+        // add custom divider after end of each page
+        domComponents.addComponent({ type: "custom-divider" });
+      });
+    }
+    // if canavs is empty just who one custom divider
+    else if (editor) {
+      const domComponents = editor.DomComponents;
+      domComponents.addComponent({ type: "custom-divider" });
+    }
+  }, [canvasPages, grapesjsEditor]);
   return (
     <div>
-      {/* Floating pages sidebar */}
-      <div
-        style={{
-          position: "fixed",
-          left: "10px",
-          top: "48%",
-          zIndex: "999",
+      {/* Main editor component */}
+      <GjsEditor
+        grapesjs={GrapesJS}
+        grapesjsCss="https://unpkg.com/grapesjs/dist/css/grapes.min.css"
+        plugins={[
+          {
+            id: "gjs-blocks-basic",
+            src: "https://unpkg.com/grapesjs-blocks-basic",
+          },
+
+          ReactCoreGrapesjs,
+        ]}
+        onEditor={onEditor}
+        options={{
+          fromElement: true,
+          height: "100vh",
+          storageManager: false,
+          // to style individual compoenents
+          selectorManager: {
+            componentFirst: true,
+          },
+          parser: {
+            optionsHtml: {
+              allowScripts: true,
+            },
+          },
         }}
       >
-        <FloatingPagesSidebar />
-      </div>
-      <div id="gjs" />;
+        <PagesProvider>
+          {(props) => (
+            <>
+              <div
+                style={{
+                  position: "fixed",
+                  left: "10px",
+                  top: "50%",
+                  transform: "translateY(-50%)",
+                  zIndex: "999999",
+                }}
+              >
+                <FloatingPagesSidebar {...props} />
+              </div>
+              <div style={{ marginTop: "30px" }}>
+                <Canvas />
+              </div>
+            </>
+          )}
+        </PagesProvider>
+      </GjsEditor>
     </div>
   );
 }

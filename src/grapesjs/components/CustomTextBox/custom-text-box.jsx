@@ -66,7 +66,7 @@ const CustomTextBox = () => {
   return (
     <div style={styles.container}>
       <div style={styles.innerBox}>
-        <FixedMenu onAction={(action) => handleMenuAction(action)} />
+        {/* <FixedMenu onAction={(action) => handleMenuAction(action)} /> */}
         <Tiptap onToggleMenu={handleToggleMenu} />
       </div>
       {showMenu && (
