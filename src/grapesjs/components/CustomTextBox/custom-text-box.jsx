@@ -54,6 +54,12 @@ const CustomTextBox = () => {
 
     tiptapEditor.commands.focus("end");
   };
+  // clear editor text after slash menu click
+  const handleMenuItemClick = () => {
+    if (tiptapEditor) {
+      tiptapEditor.commands.setContent(""); // Clear the content
+    }
+  };
 
   const styles = {
     container: {
@@ -80,7 +86,11 @@ const CustomTextBox = () => {
       </div>
       {showMenu && (
         <div ref={slashMenuRef}>
-          <SlashMenu handleMenuAction={handleMenuAction} query={query} />
+          <SlashMenu
+            handleMenuAction={handleMenuAction}
+            query={query}
+            handleMenuItemClick={handleMenuItemClick}
+          />
         </div>
       )}
     </div>
