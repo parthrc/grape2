@@ -1,7 +1,7 @@
 import React from "react";
 import useGrapesjsEditorStore from "../../../store/GrapesjsEditorStore.jsx";
 
-const SlashMenu = ({ handleMenuAction }) => {
+const SlashMenu = ({ handleMenuAction, query, handleMenuItemClick }) => {
   // get all blocks
   const { availableBlocks, grapesjsEditor } = useGrapesjsEditorStore();
 
@@ -14,6 +14,8 @@ const SlashMenu = ({ handleMenuAction }) => {
       // Create a JSX component from the component ID
       const jsxComponent = React.createElement(block.component_id);
       grapesjsEditor.addComponents(jsxComponent);
+
+      handleMenuItemClick();
     }
 
     // if tiptap menu item
@@ -21,6 +23,10 @@ const SlashMenu = ({ handleMenuAction }) => {
       handleMenuAction(block.label);
     }
   };
+  // filter blocks based on query
+  const filteredBlocks = availableBlocks.filter((block) =>
+    block.label.toLowerCase().includes(query.toLowerCase())
+  );
 
   console.log("avialable block", availableBlocks);
   return (
@@ -32,8 +38,7 @@ const SlashMenu = ({ handleMenuAction }) => {
         zIndex: "99999",
       }}
     >
-      SlashMenu
-      {availableBlocks.map((block, index) => {
+      {filteredBlocks.map((block, index) => {
         // console.log("block=", block.label);
         return (
           <div
