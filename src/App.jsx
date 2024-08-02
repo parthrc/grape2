@@ -5,6 +5,7 @@ import ReactCoreGrapesjs from "./grapesjs/core/react-core-grapesjs.jsx";
 import useGrapesjsEditorStore from "./store/GrapesjsEditorStore.jsx";
 import FloatingPagesSidebar from "./grapesjs/components/FloatingPagesSidebar/FloatingPagesSidebar.jsx";
 import { useEffect } from "react";
+import GrapesjsTailwindPlugin from "grapesjs-tailwind";
 
 function App() {
   const {
@@ -129,6 +130,7 @@ function App() {
           },
 
           ReactCoreGrapesjs,
+          GrapesjsTailwindPlugin,
         ]}
         onEditor={onEditor}
         options={{
