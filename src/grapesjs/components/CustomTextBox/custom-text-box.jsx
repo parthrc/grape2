@@ -7,6 +7,7 @@ import useGrapesjsEditorStore from "../../../store/GrapesjsEditorStore.jsx";
 const CustomTextBox = () => {
   // State to manage slash menu visibility
   const [showMenu, setShowMenu] = useState(false);
+  const [query, setQuery] = useState("");
   // ref for slash menu
   const slashMenuRef = useRef(null);
 
@@ -18,11 +19,16 @@ const CustomTextBox = () => {
     setShowMenu(show);
   }, []);
 
+  // handle slash menu query
+  const handleQueryChange = useCallback((newQuery) => {
+    setQuery(newQuery);
+  }, []);
+
   // handle fixed-menu actions
   const handleMenuAction = (action) => {
-    console.log("Inside handleMenuAction", action);
     if (!tiptapEditor) return;
-
+    // clear slash menu query
+    setQuery("");
     switch (action) {
       case "bold":
         console.log("bold fired");
@@ -67,11 +73,14 @@ const CustomTextBox = () => {
     <div style={styles.container}>
       <div style={styles.innerBox}>
         {/* <FixedMenu onAction={(action) => handleMenuAction(action)} /> */}
-        <Tiptap onToggleMenu={handleToggleMenu} />
+        <Tiptap
+          onToggleMenu={handleToggleMenu}
+          onQueryChange={handleQueryChange}
+        />
       </div>
       {showMenu && (
         <div ref={slashMenuRef}>
-          <SlashMenu handleMenuAction={handleMenuAction} />
+          <SlashMenu handleMenuAction={handleMenuAction} query={query} />
         </div>
       )}
     </div>
