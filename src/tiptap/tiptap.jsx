@@ -60,7 +60,11 @@ const Tiptap = ({ onToggleMenu, onQueryChange }) => {
     }
   }, [tiptapEditor, setTiptapEditor]);
 
-  return <EditorContent editor={tiptapEditor} />;
+  return (
+    <div className="tiptap-container">
+      <EditorContent editor={tiptapEditor} />
+    </div>
+  );
 };
 
 export default Tiptap;

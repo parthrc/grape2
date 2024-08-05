@@ -1,7 +1,6 @@
 import React, { useCallback, useRef, useState } from "react";
 import Tiptap from "../../../tiptap/tiptap.jsx";
 import SlashMenu from "../SlashMenu/SlashMenu.jsx";
-import FixedMenu from "../FixedMenu/FixedMenu.jsx";
 import useGrapesjsEditorStore from "../../../store/GrapesjsEditorStore.jsx";
 
 const CustomTextBox = () => {

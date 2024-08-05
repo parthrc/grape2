@@ -17,6 +17,10 @@ function App() {
     setCanvasPages,
   } = useGrapesjsEditorStore();
 
+  // Handle tailwind's use of slashes in css names
+  const escapeName = (name) =>
+    `${name}`.trim().replace(/([^a-z0-9\w-:/]+)/gi, "-");
+
   // callback called once editor is initalized
   const onEditor = (editor) => {
     console.log("Editor loaded", { editor });
@@ -124,14 +128,14 @@ function App() {
         grapesjs={GrapesJS}
         grapesjsCss="https://unpkg.com/grapesjs/dist/css/grapes.min.css"
         plugins={[
+          GrapesjsTailwindPlugin, // conflicting with slash menu css
+
           {
             id: "gjs-blocks-basic",
             src: "https://unpkg.com/grapesjs-blocks-basic",
           },
 
           ReactCoreGrapesjs,
-
-          GrapesjsTailwindPlugin, // disabled, conflicting with slash menu css
         ]}
         onEditor={onEditor}
         options={{
@@ -141,6 +145,7 @@ function App() {
           // to style individual compoenents
           selectorManager: {
             componentFirst: true,
+            escapeName,
           },
           parser: {
             optionsHtml: {
