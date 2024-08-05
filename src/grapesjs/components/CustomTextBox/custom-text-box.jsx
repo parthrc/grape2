@@ -27,6 +27,7 @@ const CustomTextBox = () => {
   // handle fixed-menu actions
   const handleMenuAction = (action) => {
     if (!tiptapEditor) return;
+    console.log("editor value,", tiptapEditor.getText());
     // clear slash menu query
     setQuery("");
     switch (action) {

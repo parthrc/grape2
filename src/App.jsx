@@ -130,7 +130,8 @@ function App() {
           },
 
           ReactCoreGrapesjs,
-          GrapesjsTailwindPlugin,
+
+          GrapesjsTailwindPlugin, // disabled, conflicting with slash menu css
         ]}
         onEditor={onEditor}
         options={{

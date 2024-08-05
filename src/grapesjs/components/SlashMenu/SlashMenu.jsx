@@ -1,5 +1,6 @@
 import React from "react";
 import useGrapesjsEditorStore from "../../../store/GrapesjsEditorStore.jsx";
+import addComponentNextToSelected from "../../../utils/grapesjs.js";
 
 const SlashMenu = ({ handleMenuAction, query, handleMenuItemClick }) => {
   // get all blocks
@@ -13,7 +14,9 @@ const SlashMenu = ({ handleMenuAction, query, handleMenuItemClick }) => {
     if (block.category === "custom-component") {
       // Create a JSX component from the component ID
       const jsxComponent = React.createElement(block.component_id);
-      grapesjsEditor.addComponents(jsxComponent);
+      // add new component next to the currently clicked element
+      addComponentNextToSelected(grapesjsEditor, jsxComponent);
+      // grapesjsEditor.addComponents(jsxComponent);
 
       handleMenuItemClick();
     }
