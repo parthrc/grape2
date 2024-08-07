@@ -76,7 +76,7 @@ const CustomTextBox = () => {
   };
 
   return (
-    <div style={styles.container}>
+    <div className="bg-blue-50">
       <div style={styles.innerBox}>
         {/* <FixedMenu onAction={(action) => handleMenuAction(action)} /> */}
         <Tiptap

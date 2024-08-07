@@ -142,8 +142,16 @@ function App() {
         options={{
           pluginsOpts: {
             [GrapesjsTailwindPlugin]: {
-              // added this option to not fetch the default tailwind cdn file
-              tailwindPlayCdn: "#",
+              // custom config
+              config: {
+                content: ["./src/**/*.{js,jsx,ts,tsx}", "./public/index.html"], // where tailwind will look for styles
+                theme: {
+                  extend: {},
+                },
+                corePlugins: {
+                  preflight: false, // disable tailwind base styles
+                },
+              },
             },
           },
           fromElement: true,
