@@ -119,6 +119,7 @@ function App() {
     else if (editor) {
       const domComponents = editor.DomComponents;
       domComponents.addComponent({ type: "custom-divider" });
+      domComponents.addComponent({ type: "custom-text-box" });
     }
   }, [canvasPages, grapesjsEditor]);
   return (
@@ -139,6 +140,12 @@ function App() {
         ]}
         onEditor={onEditor}
         options={{
+          pluginsOpts: {
+            [GrapesjsTailwindPlugin]: {
+              // added this option to not fetch the default tailwind cdn file
+              tailwindPlayCdn: "#",
+            },
+          },
           fromElement: true,
           height: "100vh",
           storageManager: false,
