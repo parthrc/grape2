@@ -13,8 +13,8 @@ const useGrapesjsEditorStore = create((set) => ({
   addCanvasPage: (page) =>
     set((state) => ({ canvasPages: [...state.canvasPages, page] })),
 
-  // canvasList: [],
-  // setCanvasList: (canvasList) => set({ canvasList }),
+  isPreviewMode: false,
+  setPreviewMode: (isPreview) => set({ isPreviewMode: isPreview }),
 }));
 
 export default useGrapesjsEditorStore;

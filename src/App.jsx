@@ -13,10 +13,9 @@ function App() {
   const {
     setGrapesjsEditor,
     setAvailableBlocks,
-    availableBlocks,
     grapesjsEditor,
     canvasPages,
-    setCanvasPages,
+    setPreviewMode,
   } = useGrapesjsEditorStore();
 
   // Handle tailwind's use of slashes in css names
@@ -28,6 +27,18 @@ function App() {
     console.log("Editor loaded", { editor });
     // set editor isntance to zustand store
     if (editor) setGrapesjsEditor(editor);
+
+    // commands
+    // when previwe mode is true
+    editor.on("run:core:preview", () => {
+      setPreviewMode(true);
+      console.log("Preview mode enabled!");
+    });
+    // when preview mode is false
+    editor.on("stop:core:preview", () => {
+      setPreviewMode(false);
+      console.log("Preview mode disabled!");
+    });
 
     // Add components to as Blocks...
 
