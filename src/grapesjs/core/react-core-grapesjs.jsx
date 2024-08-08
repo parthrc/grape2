@@ -148,22 +148,29 @@ const ReactCoreGrapesjs = (editor) => {
     },
     view: coreReactView,
   });
-
-  // // Add custom page
-  // domc.addType("custom-page", {
-  //   model: {
-  //     ...coreReactModel,
-  //     defaults: {
-  //       component: CustomPageComponent,
-  //       draggable: true,
-  //       droppable: true,
-  //       editable: false,
-  //       attributes: { class: "custom-page" },
-  //       props: { content: "Default Content" }, // Add this line to define custom props
-  //     },
-  //   },
-  //   view: coreReactView,
-  // });
+  // BLOCK MANAGER
+  // adding custom-text-box to Blocks
+  editor.Blocks.add("custom-text-box", {
+    label: "Custom text box",
+    content: { type: "custom-text-box" },
+    category: "React components",
+  });
+  // add sample-component to Blocks
+  editor.Blocks.add("sample-component", {
+    label: "Sample Component",
+    content: {
+      type: "sample-component",
+    },
+    category: "React components",
+  });
+  // add custom-divieder to Blocks
+  editor.Blocks.add("custom-divider", {
+    label: "Custom Divider",
+    content: {
+      type: "custom-divider",
+    },
+    category: "React components",
+  });
 };
 
 export default ReactCoreGrapesjs;
