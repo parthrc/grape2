@@ -6,6 +6,8 @@ import useGrapesjsEditorStore from "./store/GrapesjsEditorStore.jsx";
 import FloatingPagesSidebar from "./grapesjs/components/FloatingPagesSidebar/FloatingPagesSidebar.jsx";
 import { useEffect } from "react";
 import GrapesjsTailwindPlugin from "grapesjs-tailwind";
+import CustomPageComponent from "./grapesjs/CustomTypes/CustomPageType/CustomPage.jsx";
+import parserPostCSS from "grapesjs-parser-postcss";
 
 function App() {
   const {
@@ -100,15 +102,6 @@ function App() {
         // with all its children
         domComponents.addComponent({
           type: "custom-page",
-          props: {
-            content: page.id,
-          },
-          components: [
-            {
-              type: "text",
-              content: page.content,
-            },
-          ],
         });
 
         // add custom divider after end of each page
@@ -118,8 +111,8 @@ function App() {
     // if canavs is empty just who one custom divider
     else if (editor) {
       const domComponents = editor.DomComponents;
+      domComponents.addComponent({ type: "custom-page" });
       domComponents.addComponent({ type: "custom-divider" });
-      domComponents.addComponent({ type: "custom-text-box" });
     }
   }, [canvasPages, grapesjsEditor]);
   return (
@@ -129,8 +122,9 @@ function App() {
         grapesjs={GrapesJS}
         grapesjsCss="https://unpkg.com/grapesjs/dist/css/grapes.min.css"
         plugins={[
-          GrapesjsTailwindPlugin, // conflicting with slash menu css
-
+          GrapesjsTailwindPlugin,
+          CustomPageComponent,
+          parserPostCSS,
           {
             id: "gjs-blocks-basic",
             src: "https://unpkg.com/grapesjs-blocks-basic",
