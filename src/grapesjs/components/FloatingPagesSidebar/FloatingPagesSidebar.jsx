@@ -56,14 +56,14 @@ const FloatingPagesSidebar = ({ pages, selected, add, select, remove }) => {
     canvasPages = [],
     setCanvasPages,
   } = useGrapesjsEditorStore();
-  console.log("Canvas pages START", canvasPages);
+  // console.log("Canvas pages START", canvasPages);
 
   // console.log("Outside memo canvasPages", canvasPages);
   const [pagesIds, setPagesIds] = useState([]);
 
   // Update pagesIds whenever canvasPages changes
   useEffect(() => {
-    console.log("use effect running");
+    // console.log("use effect running");
     setPagesIds(canvasPages.map((page) => page.id));
   }, [canvasPages]);
 

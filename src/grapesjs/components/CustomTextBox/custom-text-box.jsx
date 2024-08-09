@@ -2,6 +2,7 @@ import React, { useCallback, useRef, useState } from "react";
 import Tiptap from "../../../tiptap/tiptap.jsx";
 import SlashMenu from "../SlashMenu/SlashMenu.jsx";
 import useGrapesjsEditorStore from "../../../store/GrapesjsEditorStore.jsx";
+import { sliceUntilSlash } from "../../../utils/random.js";
 
 const CustomTextBox = () => {
   // State to manage slash menu visibility
@@ -26,9 +27,13 @@ const CustomTextBox = () => {
   // handle fixed-menu actions
   const handleMenuAction = (action) => {
     if (!tiptapEditor) return;
-    console.log("editor value,", tiptapEditor.getText());
+
+    // Remove the slash from teh text before executing the rte fucntions
+    tiptapEditor.commands.setContent(sliceUntilSlash(tiptapEditor.getText()));
+
     // clear slash menu query
     setQuery("");
+
     switch (action) {
       case "bold":
         console.log("bold fired");

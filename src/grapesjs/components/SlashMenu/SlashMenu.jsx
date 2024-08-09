@@ -31,7 +31,7 @@ const SlashMenu = ({ handleMenuAction, query, handleMenuItemClick }) => {
     block.label.toLowerCase().includes(query.toLowerCase())
   );
 
-  console.log("avialable block", availableBlocks);
+  // console.log("avialable block", availableBlocks);
   return (
     <div
       style={{

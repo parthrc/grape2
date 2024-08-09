@@ -24,7 +24,7 @@ function App() {
 
   // callback called once editor is initalized
   const onEditor = (editor) => {
-    console.log("Editor loaded", { editor });
+    // console.log("Editor loaded", { editor });
     // set editor isntance to zustand store
     if (editor) setGrapesjsEditor(editor);
 
@@ -101,6 +101,7 @@ function App() {
       const domComponents = editor.DomComponents;
       domComponents.addComponent({ type: "custom-page" });
       domComponents.addComponent({ type: "custom-divider" });
+      domComponents.addComponent({ type: "custom-text-box" });
     }
   }, [canvasPages, grapesjsEditor]);
   return (
