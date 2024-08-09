@@ -1,5 +1,3 @@
-import SampleComponent from "../../components/SampleComponent/SampleComponent.jsx";
-
 const CustomPageComponent = (editor) => {
   editor.DomComponents.addType("custom-page", {
     // make editor understand when to bind 'custom-page'

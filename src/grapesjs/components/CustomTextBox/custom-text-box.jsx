@@ -87,6 +87,7 @@ const CustomTextBox = () => {
         <Tiptap
           onToggleMenu={handleToggleMenu}
           onQueryChange={handleQueryChange}
+          
         />
       </div>
       {showMenu && (

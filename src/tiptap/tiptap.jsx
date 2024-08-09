@@ -5,7 +5,7 @@ import useGrapesjsEditorStore from "../store/GrapesjsEditorStore.jsx";
 import { useEffect } from "react";
 
 const Tiptap = ({ onToggleMenu, onQueryChange }) => {
-  const { setTiptapEditor, grapesjsEditor } = useGrapesjsEditorStore();
+  const { setTiptapEditor, isPreviewMode } = useGrapesjsEditorStore();
   const tiptapEditor = useEditor({
     extensions: [
       StarterKit,
@@ -20,6 +20,7 @@ const Tiptap = ({ onToggleMenu, onQueryChange }) => {
         class: "customTiptapInput",
       },
     },
+
     autofocus: true,
     // when editor loses focus
     onBlur() {
@@ -57,8 +58,10 @@ const Tiptap = ({ onToggleMenu, onQueryChange }) => {
   useEffect(() => {
     if (tiptapEditor) {
       setTiptapEditor(tiptapEditor);
+      // set editable status of tiptap based on previewMode
+      tiptapEditor.setEditable(!isPreviewMode);
     }
-  }, [tiptapEditor, setTiptapEditor]);
+  }, [tiptapEditor, setTiptapEditor, isPreviewMode]);
 
   return (
     <div className="tiptap-container">
