@@ -8,6 +8,7 @@ import { useEffect } from "react";
 import GrapesjsTailwindPlugin from "grapesjs-tailwind";
 import CustomPageComponent from "./grapesjs/CustomTypes/CustomPageType/CustomPage.jsx";
 import parserPostCSS from "grapesjs-parser-postcss";
+import CustomDividerComponenet from "./grapesjs/CustomTypes/CustomDividerType/CustomDivider.jsx";
 
 function App() {
   const {
@@ -16,6 +17,7 @@ function App() {
     grapesjsEditor,
     canvasPages,
     setPreviewMode,
+    addCanvasPage,
   } = useGrapesjsEditorStore();
 
   // Handle tailwind's use of slashes in css names
@@ -88,22 +90,27 @@ function App() {
       canvasPages.forEach((page, index) => {
         // for each page add custom-page component
         // with all its children
+        console.log(page);
         domComponents.addComponent({
           type: "custom-page",
+          components: page.componentsList,
         });
 
         // add custom divider after end of each page
         domComponents.addComponent({ type: "custom-divider" });
       });
     }
-    // if canavs is empty just who one custom divider
-    else if (editor) {
+    // if canvas is empty just who one custom divider
+    else if (editor && canvasPages.length === 0) {
+      addCanvasPage({
+        id: canvasPages.length + 1,
+        componentsList: [],
+      });
       const domComponents = editor.DomComponents;
       domComponents.addComponent({ type: "custom-page" });
       domComponents.addComponent({ type: "custom-divider" });
-      domComponents.addComponent({ type: "custom-text-box" });
     }
-  }, [canvasPages, grapesjsEditor]);
+  }, [canvasPages, grapesjsEditor, addCanvasPage]);
   return (
     <div>
       {/* Main editor component */}
@@ -114,6 +121,7 @@ function App() {
           GrapesjsTailwindPlugin,
           CustomPageComponent,
           parserPostCSS,
+          CustomDividerComponenet,
           {
             id: "gjs-blocks-basic",
             src: "https://unpkg.com/grapesjs-blocks-basic",

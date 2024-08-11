@@ -2,15 +2,12 @@ import { FaPlus } from "react-icons/fa";
 import { FaWandMagicSparkles } from "react-icons/fa6";
 import { FaChevronDown } from "react-icons/fa";
 import useGrapesjsEditorStore from "../../../store/GrapesjsEditorStore.jsx";
-import { v4 as uuidv4 } from "uuid";
 
 const CustomDivider = () => {
   const { grapesjsEditor, addCanvasPage, canvasPages } =
     useGrapesjsEditorStore();
 
   const handleAddNewPage = () => {
-    const newPageId = uuidv4();
-    const newPageContent = `<div>New Page Content for ${newPageId}</div>`;
     // const pageManager = grapesjsEditor.Pages;
     // add new page to pageManager
     // pageManager.add({
@@ -20,9 +17,9 @@ const CustomDivider = () => {
     // });
 
     // add new page to our zustand store
-    addCanvasPage({
+    const newPage = addCanvasPage({
       id: canvasPages.length + 1,
-      content: newPageContent,
+      componentsList: [],
     });
   };
 

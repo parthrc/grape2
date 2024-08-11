@@ -134,20 +134,20 @@ const ReactCoreGrapesjs = (editor) => {
   });
 
   // Add custom divider
-  domc.addType("custom-divider", {
-    model: {
-      ...coreReactModel,
-      defaults: {
-        component: CustomDivider,
-        draggable: true,
-        droppable: true,
-        editable: false,
-        attributes: { class: "custom-divider" },
-        props: {}, // Add this line to define custom props
-      },
-    },
-    view: coreReactView,
-  });
+  // domc.addType("custom-divider", {
+  //   model: {
+  //     ...coreReactModel,
+  //     defaults: {
+  //       component: CustomDivider,
+  //       draggable: true,
+  //       droppable: true,
+  //       editable: false,
+  //       attributes: { class: "custom-divider" },
+  //       props: {}, // Add this line to define custom props
+  //     },
+  //   },
+  //   view: coreReactView,
+  // });
   // BLOCK MANAGER
   // adding custom-text-box to Blocks
   editor.Blocks.add("custom-text-box", {
@@ -164,13 +164,13 @@ const ReactCoreGrapesjs = (editor) => {
     category: "React components",
   });
   // add custom-divieder to Blocks
-  editor.Blocks.add("custom-divider", {
-    label: "Custom Divider",
-    content: {
-      type: "custom-divider",
-    },
-    category: "React components",
-  });
+  // editor.Blocks.add("custom-divider", {
+  //   label: "Custom Divider",
+  //   content: {
+  //     type: "custom-divider",
+  //   },
+  //   category: "React components",
+  // });
 };
 
 export default ReactCoreGrapesjs;

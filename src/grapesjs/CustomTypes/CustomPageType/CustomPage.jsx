@@ -9,17 +9,17 @@ const CustomPageComponent = (editor) => {
       defaults: {
         tagName: "div",
         attributes: { title: "Custom page", class: "custom-page" },
+        // Default styles to make it visible and usable
+        style: {
+          minHeight: "200px", // Ensures it's large enough to drop components into
+          padding: "10px", // Adds space inside the component
+          border: "2px dashed #ccc", // Visual indication that something can be dropped here
+          backgroundColor: "#f9f9f9", // Light background to make it stand out
+        },
         // styles: `.custom-page {}`,
         draggable: false, // cannot drag this comp
         droppable: true, // can drop other comps inside
-        components: (
-          <div>
-            <h1>Hello</h1>
-            <h1>Custom apge</h1>
-            <h1>Hello</h1>
-            <h1>Hello</h1>
-          </div>
-        ),
+        components: [],
       },
     },
 
