@@ -1,6 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
 import { FiFilm } from "react-icons/fi";
-import useGrapesjsEditorStore from "../../../store/GrapesjsEditorStore.jsx";
 import SidebarItem from "./SidebarItem.jsx";
 import { arrayMove, SortableContext } from "@dnd-kit/sortable";
 import {
@@ -9,6 +8,8 @@ import {
   useSensor,
   PointerSensor,
 } from "@dnd-kit/core";
+import { useDispatch, useSelector } from "react-redux";
+import { setCanvasPages } from "../../../store/Redux store/grapesjsSlice.jsx";
 
 const styles = {
   container: {
@@ -51,8 +52,11 @@ const styles = {
 
 const FloatingPagesSidebar = ({ pages, selected, add, select, remove }) => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  const { grapesjsEditor, canvasPages, setCanvasPages } =
-    useGrapesjsEditorStore();
+  // const { canvasPages, setCanvasPages } =
+  //   useGrapesjsEditorStore();
+  // redux
+  const dispatch = useDispatch();
+  const canvasPages = useSelector((state) => state.canvasPages);
   // console.log("Canvas pages START", canvasPages);
 
   // console.log("Outside memo canvasPages", canvasPages);
@@ -61,6 +65,7 @@ const FloatingPagesSidebar = ({ pages, selected, add, select, remove }) => {
   // Update pagesIds whenever canvasPages changes
   useEffect(() => {
     // console.log("use effect running");
+    if (!canvasPages) return;
     setPagesIds(
       canvasPages.map((page) => {
         console.log(page);
@@ -149,7 +154,7 @@ const FloatingPagesSidebar = ({ pages, selected, add, select, remove }) => {
     const final = arrayMove(canvasPages, activeItemIndex, activeOverIndex);
     console.log("Final", final);
 
-    setCanvasPages(final);
+    dispatch(setCanvasPages(final));
     console.log("Last return");
     return;
   }
@@ -185,8 +190,8 @@ const FloatingPagesSidebar = ({ pages, selected, add, select, remove }) => {
               X
             </div>
 
-            {canvasPages.length === 0 && <div>No pages yet</div>}
-            {canvasPages.length > 0 && (
+            {canvasPages && canvasPages.length === 0 && <div>No pages yet</div>}
+            {canvasPages && canvasPages.length > 0 && (
               <div style={styles.pagesOverviewContainer}>
                 <SortableContext items={pagesIds}>
                   {canvasPages.map((page) => {

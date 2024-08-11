@@ -1,10 +1,12 @@
 import React from "react";
-import useGrapesjsEditorStore from "../../../store/GrapesjsEditorStore.jsx";
 import addComponentNextToSelected from "../../../utils/grapesjs.js";
+import { useSelector } from "react-redux";
 
 const SlashMenu = ({ handleMenuAction, query, handleMenuItemClick }) => {
   // get all blocks
-  const { availableBlocks, grapesjsEditor } = useGrapesjsEditorStore();
+
+  const availableBlocks = useSelector((state) => state.availableBlocks);
+  const grapesjsEditor = useSelector((state) => state.gra);
 
   //ahndler
   const handleOnClickSlashMenuItem = (block) => {

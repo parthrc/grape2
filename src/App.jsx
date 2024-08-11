@@ -2,7 +2,6 @@ import "./App.css";
 import GjsEditor, { Canvas, PagesProvider } from "@grapesjs/react";
 import GrapesJS from "grapesjs";
 import ReactCoreGrapesjs from "./grapesjs/core/react-core-grapesjs.jsx";
-import useGrapesjsEditorStore from "./store/GrapesjsEditorStore.jsx";
 import FloatingPagesSidebar from "./grapesjs/components/FloatingPagesSidebar/FloatingPagesSidebar.jsx";
 import { useEffect } from "react";
 import GrapesjsTailwindPlugin from "grapesjs-tailwind";
@@ -10,16 +9,21 @@ import CustomPageComponent from "./grapesjs/CustomTypes/CustomPageType/CustomPag
 import parserPostCSS from "grapesjs-parser-postcss";
 import CustomDividerComponenet from "./grapesjs/CustomTypes/CustomDividerType/CustomDivider.jsx";
 import AddEventListeners from "./grapesjs/EventListeners/GrapesjsListeners.jsx";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  addCanvasPage,
+  setAvailableBlocks,
+  setGrapesjsEditor,
+  setPreviewMode,
+} from "./store/Redux store/grapesjsSlice.jsx";
 
 function App() {
-  const {
-    setGrapesjsEditor,
-    setAvailableBlocks,
-    grapesjsEditor,
-    canvasPages,
-    setPreviewMode,
-    addCanvasPage,
-  } = useGrapesjsEditorStore();
+  // redux
+  const dispatch = useDispatch();
+  // select
+  const grapesjsEditor = useSelector((state) => state.grapesjsEditor);
+  const canvasPages = useSelector((state) => state.canvasPages);
+  // dispatch
 
   // Handle tailwind's use of slashes in css names
   const escapeName = (name) =>
@@ -34,12 +38,12 @@ function App() {
     // commands
     // when previwe mode is true
     editor.on("run:core:preview", () => {
-      setPreviewMode(true);
+      dispatch(setPreviewMode(true));
       console.log("Preview mode enabled!");
     });
     // when preview mode is false
     editor.on("stop:core:preview", () => {
-      setPreviewMode(false);
+      dispatch(setPreviewMode(false));
       console.log("Preview mode disabled!");
     });
 
@@ -71,7 +75,7 @@ function App() {
     });
 
     // save finalSlashMenuItems to the zustand store
-    setAvailableBlocks(finalSlashMenuItems);
+    dispatch(setAvailableBlocks(finalSlashMenuItems));
 
     // PAGES section
     // we need to programmatically render the canvas
@@ -82,7 +86,7 @@ function App() {
     const editor = grapesjsEditor;
     // check if editor instance exists
     // check if there are pages in the canvas
-    if (editor && canvasPages.length > 0) {
+    if (editor && canvasPages && canvasPages.length > 0) {
       // clear any components
       // because we will render all ourselves
       const domComponents = editor.DomComponents;
@@ -102,16 +106,18 @@ function App() {
       });
     }
     // if canvas is empty just who one custom divider
-    else if (editor && canvasPages.length === 0) {
-      addCanvasPage({
-        id: canvasPages.length + 1,
-        componentsList: [],
-      });
+    else if (editor && canvasPages && canvasPages.length === 0) {
+      dispatch(
+        addCanvasPage({
+          id: canvasPages.length + 1,
+          componentsList: [],
+        })
+      );
       const domComponents = editor.DomComponents;
       domComponents.addComponent({ type: "custom-page" });
       domComponents.addComponent({ type: "custom-divider" });
     }
-  }, [canvasPages, grapesjsEditor, addCanvasPage]);
+  }, [canvasPages, grapesjsEditor, dispatch]);
   return (
     <div>
       {/* Main editor component */}

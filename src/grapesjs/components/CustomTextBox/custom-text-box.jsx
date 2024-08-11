@@ -1,8 +1,8 @@
 import React, { useCallback, useRef, useState } from "react";
 import Tiptap from "../../../tiptap/tiptap.jsx";
 import SlashMenu from "../SlashMenu/SlashMenu.jsx";
-import useGrapesjsEditorStore from "../../../store/GrapesjsEditorStore.jsx";
 import { sliceUntilSlash } from "../../../utils/random.js";
+import { useSelector } from "react-redux";
 
 const CustomTextBox = () => {
   // State to manage slash menu visibility
@@ -11,8 +11,8 @@ const CustomTextBox = () => {
   // ref for slash menu
   const slashMenuRef = useRef(null);
 
-  // get tiptapEditor isntance from zustand
-  const { tiptapEditor } = useGrapesjsEditorStore();
+  // get tiptapEditor isntance from store
+  const tiptapEditor = useSelector((state) => state.tiptapEditor);
 
   // handle toggle of slashmenu
   const handleToggleMenu = useCallback((show) => {
@@ -87,7 +87,6 @@ const CustomTextBox = () => {
         <Tiptap
           onToggleMenu={handleToggleMenu}
           onQueryChange={handleQueryChange}
-          
         />
       </div>
       {showMenu && (

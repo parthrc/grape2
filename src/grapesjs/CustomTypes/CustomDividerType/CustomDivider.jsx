@@ -1,5 +1,3 @@
-import useGrapesjsEditorStore from "../../../store/GrapesjsEditorStore.jsx";
-
 const CustomDividerComponent = (editor) => {
   // Custom Divider Component with Plus Sign
   editor.Components.addType("custom-divider", {

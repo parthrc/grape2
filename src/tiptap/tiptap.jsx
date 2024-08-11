@@ -1,11 +1,13 @@
 import { EditorContent, useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import Placeholder from "@tiptap/extension-placeholder";
-import useGrapesjsEditorStore from "../store/GrapesjsEditorStore.jsx";
 import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { setTiptapEditor } from "../store/Redux store/grapesjsSlice.jsx";
 
 const Tiptap = ({ onToggleMenu, onQueryChange }) => {
-  const { setTiptapEditor, isPreviewMode } = useGrapesjsEditorStore();
+  const dispatch = useDispatch();
+  const isPreviewMode = useSelector((state) => state.isPreviewMode);
   const tiptapEditor = useEditor({
     extensions: [
       StarterKit,
@@ -57,11 +59,11 @@ const Tiptap = ({ onToggleMenu, onQueryChange }) => {
   // set tiptapEditor isnatnce to zustand
   useEffect(() => {
     if (tiptapEditor) {
-      setTiptapEditor(tiptapEditor);
+      dispatch(setTiptapEditor(tiptapEditor));
       // set editable status of tiptap based on previewMode
       tiptapEditor.setEditable(!isPreviewMode);
     }
-  }, [tiptapEditor, setTiptapEditor, isPreviewMode]);
+  }, [tiptapEditor, isPreviewMode, dispatch]);
 
   return (
     <div className="tiptap-container">

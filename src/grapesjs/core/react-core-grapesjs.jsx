@@ -2,7 +2,7 @@ import ReactDOM from "react-dom/client";
 import React from "react";
 import CustomTextBox from "../components/CustomTextBox/custom-text-box.jsx";
 import SampleComponent from "../components/SampleComponent/SampleComponent.jsx";
-import CustomDivider from "../components/CustomDivider/CustomDivider.jsx";
+
 
 const ReactCoreGrapesjs = (editor) => {
   const domc = editor.Components;
