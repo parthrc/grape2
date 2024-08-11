@@ -1,3 +1,5 @@
+import useGrapesjsEditorStore from "../../../store/GrapesjsEditorStore.jsx";
+
 const CustomDividerComponent = (editor) => {
   // Custom Divider Component with Plus Sign
   editor.Components.addType("custom-divider", {
@@ -16,10 +18,18 @@ const CustomDividerComponent = (editor) => {
         "click .plus-sign": "addNewPage",
       },
       addNewPage() {
-        const wrapper = editor.getWrapper();
-        const newPage = editor.addComponents({ type: "custom-page" });
-        const index = wrapper.indexOf(this.model);
-        wrapper.components().add(newPage, { at: index + 1 });
+        const parent = this.model.parent(); // Get the parent component
+        const currentIndex = this.model.index(); // Get the index of the current custom divider
+
+        // Add the new page immediately after the current custom divider
+        const newPage = parent
+          .components()
+          .add({ type: "custom-page" }, { at: currentIndex + 1 });
+
+        // Add a new custom divider immediately after the new page
+        parent
+          .components()
+          .add({ type: "custom-divider" }, { at: currentIndex + 2 });
       },
     },
   });

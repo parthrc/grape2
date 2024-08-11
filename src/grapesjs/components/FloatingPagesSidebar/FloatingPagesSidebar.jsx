@@ -51,11 +51,8 @@ const styles = {
 
 const FloatingPagesSidebar = ({ pages, selected, add, select, remove }) => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  const {
-    grapesjsEditor,
-    canvasPages = [],
-    setCanvasPages,
-  } = useGrapesjsEditorStore();
+  const { grapesjsEditor, canvasPages, setCanvasPages } =
+    useGrapesjsEditorStore();
   // console.log("Canvas pages START", canvasPages);
 
   // console.log("Outside memo canvasPages", canvasPages);
@@ -64,7 +61,12 @@ const FloatingPagesSidebar = ({ pages, selected, add, select, remove }) => {
   // Update pagesIds whenever canvasPages changes
   useEffect(() => {
     // console.log("use effect running");
-    setPagesIds(canvasPages.map((page) => page.id));
+    setPagesIds(
+      canvasPages.map((page) => {
+        console.log(page);
+        return page.id;
+      })
+    );
   }, [canvasPages]);
 
   // create ID's for sortable context of DND-KIT for dragging

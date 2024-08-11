@@ -9,6 +9,7 @@ import GrapesjsTailwindPlugin from "grapesjs-tailwind";
 import CustomPageComponent from "./grapesjs/CustomTypes/CustomPageType/CustomPage.jsx";
 import parserPostCSS from "grapesjs-parser-postcss";
 import CustomDividerComponenet from "./grapesjs/CustomTypes/CustomDividerType/CustomDivider.jsx";
+import AddEventListeners from "./grapesjs/EventListeners/GrapesjsListeners.jsx";
 
 function App() {
   const {
@@ -128,9 +129,14 @@ function App() {
           },
 
           ReactCoreGrapesjs,
+          AddEventListeners,
         ]}
         onEditor={onEditor}
         options={{
+          // canvas: {
+          //   // Disable only the hover type spot
+          //   customSpots: { hover: true },
+          // },
           pluginsOpts: {
             [GrapesjsTailwindPlugin]: {
               // custom config
@@ -147,8 +153,17 @@ function App() {
           },
           fromElement: true,
           height: "100vh",
-          storageManager: false,
-          // to style individual compoenents
+          // Default configurations
+          storageManager: {
+            type: "local", // Storage type. Available: local | remote
+            options: {
+              local: { key: `grapesjs-jaarvis` },
+            },
+            autosave: true, // Store data automatically
+            autoload: true, // Autoload stored data on init
+            stepsBeforeSave: 1, // If autosave is enabled, indicates how many changes are necessary before the store method is triggered
+            // to style individual compoenents
+          },
           selectorManager: {
             componentFirst: true,
             escapeName,
