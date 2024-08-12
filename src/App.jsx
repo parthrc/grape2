@@ -33,7 +33,7 @@ function App() {
   const onEditor = (editor) => {
     // console.log("Editor loaded", { editor });
     // set editor isntance to zustand store
-    if (editor) setGrapesjsEditor(editor);
+    if (editor) dispatch(setGrapesjsEditor(editor));
 
     // commands
     // when previwe mode is true
@@ -83,7 +83,9 @@ function App() {
 
   // useEffect to render all apges in teh canvas
   useEffect(() => {
-    const editor = grapesjsEditor;
+    console.log("Use effect running");
+    const editor = grapesjsEditor.editor;
+    console.log("Editor", editor);
     // check if editor instance exists
     // check if there are pages in the canvas
     if (editor && canvasPages && canvasPages.length > 0) {
@@ -107,6 +109,7 @@ function App() {
     }
     // if canvas is empty just who one custom divider
     else if (editor && canvasPages && canvasPages.length === 0) {
+      console.log("true");
       dispatch(
         addCanvasPage({
           id: canvasPages.length + 1,
@@ -160,16 +163,17 @@ function App() {
           fromElement: true,
           height: "100vh",
           // Default configurations
-          storageManager: {
-            type: "local", // Storage type. Available: local | remote
-            options: {
-              local: { key: `grapesjs-jaarvis` },
-            },
-            autosave: true, // Store data automatically
-            autoload: true, // Autoload stored data on init
-            stepsBeforeSave: 1, // If autosave is enabled, indicates how many changes are necessary before the store method is triggered
-            // to style individual compoenents
-          },
+          // storageManager: {
+          //   type: "local", // Storage type. Available: local | remote
+          //   options: {
+          //     local: { key: `grapesjs-jaarvis` },
+          //   },
+          //   autosave: true, // Store data automatically
+          //   autoload: true, // Autoload stored data on init
+          //   stepsBeforeSave: 1, // If autosave is enabled, indicates how many changes are necessary before the store method is triggered
+          //   // to style individual compoenents
+          // },
+          storageManager: false,
           selectorManager: {
             componentFirst: true,
             escapeName,

@@ -2,7 +2,7 @@ import ReactDOM from "react-dom/client";
 import React from "react";
 import CustomTextBox from "../components/CustomTextBox/custom-text-box.jsx";
 import SampleComponent from "../components/SampleComponent/SampleComponent.jsx";
-
+import ReduxCustomTextBox from "../components/CustomTextBox/custom-text-box.jsx";
 
 const ReactCoreGrapesjs = (editor) => {
   const domc = editor.Components;
@@ -104,7 +104,7 @@ const ReactCoreGrapesjs = (editor) => {
     model: {
       ...coreReactModel,
       defaults: {
-        component: CustomTextBox,
+        component: ReduxCustomTextBox,
         tagName: "div",
         draggable: true,
         droppable: true,

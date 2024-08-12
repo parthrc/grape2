@@ -2,7 +2,8 @@ import React, { useCallback, useRef, useState } from "react";
 import Tiptap from "../../../tiptap/tiptap.jsx";
 import SlashMenu from "../SlashMenu/SlashMenu.jsx";
 import { sliceUntilSlash } from "../../../utils/random.js";
-import { useSelector } from "react-redux";
+import { Provider, useSelector } from "react-redux";
+import store from "../../../store/Redux store/store.jsx";
 
 const CustomTextBox = () => {
   // State to manage slash menu visibility
@@ -102,4 +103,12 @@ const CustomTextBox = () => {
   );
 };
 
-export default CustomTextBox;
+const ReduxCustomTextBox = () => {
+  return (
+    <Provider store={store}>
+      <CustomTextBox />
+    </Provider>
+  );
+};
+
+export default ReduxCustomTextBox;

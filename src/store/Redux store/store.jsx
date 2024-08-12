@@ -1,5 +1,5 @@
 import { configureStore } from "@reduxjs/toolkit";
-import grapesjsEditorReducer from "./grapesjsSlice.jsx"; // Adjust the path accordingly
+import grapesjsEditorReducer from "./grapesjsSlice.jsx";
 
 const store = configureStore({
   reducer: {
