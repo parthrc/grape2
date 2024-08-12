@@ -1,4 +1,3 @@
-import useGrapesjsEditorStore from "../../../store/GrapesjsEditorStore.jsx";
 
 const CustomDividerComponent = (editor) => {
   // Custom Divider Component with Plus Sign
@@ -8,7 +7,8 @@ const CustomDividerComponent = (editor) => {
         tagName: "div",
         attributes: { class: "custom-divider editor-only" },
         components:
-          '<span class="plus-sign" style="font-size: 24px; color: #007bff; cursor: pointer; margin-inline:auto; width: 40px; height: 40px; display: block; ">+</span>',
+          '<span class="plus-sign" style="font-size: 24px; font-weight:900; color: #007bff; cursor: pointer; margin-inline:auto; width: 40px; height: 40px; display: flex; align-items: center; justify-content:center ">+</span>',
+
         layerable: false,
         selectable: true,
       },

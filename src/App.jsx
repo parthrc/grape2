@@ -43,6 +43,12 @@ function App() {
       console.log("Preview mode disabled!");
     });
 
+    // on any canvas update, update localStorage
+    editor.on("update", () => {
+      console.log("Canvas updated");
+      handleSave(editor);
+    });
+
     // Add components to as Blocks...
 
     // initialize the slash menu
@@ -80,41 +86,74 @@ function App() {
   // useEffect to render all apges in teh canvas
   useEffect(() => {
     const editor = grapesjsEditor;
-    // check if editor instance exists
-    // check if there are pages in the canvas
-    if (editor && canvasPages.length > 0) {
-      // clear any components
-      // because we will render all ourselves
-      const domComponents = editor.DomComponents;
-      domComponents.clear();
-      // loop through all pages store in zustand store
-      canvasPages.forEach((page, index) => {
-        // for each page add custom-page component
-        // with all its children
-        console.log(page);
-        domComponents.addComponent({
-          type: "custom-page",
-          components: page.componentsList,
-        });
-
-        // add custom divider after end of each page
-        domComponents.addComponent({ type: "custom-divider" });
-      });
+    if (!editor) return;
+    const domComponents = editor.DomComponents;
+    // check for saved content
+    const savedContent = JSON.parse(localStorage.getItem("MyCanvas"));
+    if (savedContent) {
+      editor.setComponents(savedContent.components);
     }
-    // if canvas is empty just who one custom divider
-    else if (editor && canvasPages.length === 0) {
-      addCanvasPage({
-        id: canvasPages.length + 1,
-        componentsList: [],
-      });
-      const domComponents = editor.DomComponents;
+
+    if (!savedContent) {
       domComponents.addComponent({ type: "custom-page" });
       domComponents.addComponent({ type: "custom-divider" });
     }
+
+    // // check if editor instance exists
+    // // check if there are pages in the canvas
+    // if (editor && canvasPages.length > 0) {
+    //   // clear any components
+    //   // because we will render all ourselves
+    //   const domComponents = editor.DomComponents;
+    //   domComponents.clear();
+    //   // loop through all pages store in zustand store
+    //   canvasPages.forEach((page, index) => {
+    //     // for each page add custom-page component
+    //     // with all its children
+    //     console.log(page);
+    //     domComponents.addComponent({
+    //       type: "custom-page",
+    //       components: page.componentsList,
+    //     });
+
+    //     // add custom divider after end of each page
+    //     domComponents.addComponent({ type: "custom-divider" });
+    //   });
+    // }
+    // if canvas is empty just who one custom divider
+    // else if (editor && canvasPages.length === 0) {
+    //   addCanvasPage({
+    //     id: canvasPages.length + 1,
+    //     componentsList: [],
+    //   });
+    //   const domComponents = editor.DomComponents;
+    //   domComponents.addComponent({ type: "custom-page" });
+    //   domComponents.addComponent({ type: "custom-divider" });
+    // }
   }, [canvasPages, grapesjsEditor, addCanvasPage]);
+
+  // save fucntion
+  const handleSave = (editor) => {
+    console.log("Saving canvas...");
+    // if (grapesjsEditor) {
+    //   console.log("Editor exists inside the save functon");
+    //   const components = grapesjsEditor.getComponents();
+    //   const savedContent = {
+    //     components: components.toJSON(),
+    //   };
+    //   localStorage.setItem("MyCanvas", JSON.stringify(savedContent));
+    //   return;
+    // }
+    const components = editor.getComponents();
+    const savedContent = {
+      components: components.toJSON(),
+    };
+    localStorage.setItem("MyCanvas", JSON.stringify(savedContent));
+  };
   return (
     <div>
       {/* Main editor component */}
+      <button onClick={() => handleSave(grapesjsEditor)}>Save</button>
       <GjsEditor
         grapesjs={GrapesJS}
         grapesjsCss="https://unpkg.com/grapesjs/dist/css/grapes.min.css"
@@ -122,7 +161,6 @@ function App() {
           GrapesjsTailwindPlugin,
           CustomPageComponent,
           parserPostCSS,
-          CustomDividerComponenet,
           {
             id: "gjs-blocks-basic",
             src: "https://unpkg.com/grapesjs-blocks-basic",
