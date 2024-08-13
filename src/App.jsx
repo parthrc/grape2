@@ -9,7 +9,7 @@ import GrapesjsTailwindPlugin from "grapesjs-tailwind";
 import CustomPageComponent from "./grapesjs/CustomTypes/CustomPageType/CustomPage.jsx";
 import parserPostCSS from "grapesjs-parser-postcss";
 import CustomDividerComponenet from "./grapesjs/CustomTypes/CustomDividerType/CustomDivider.jsx";
-import AddEventListeners from "./grapesjs/EventListeners/GrapesjsListeners.jsx";
+import { Template } from "./grapesjs/React Templates/Templates.jsx";
 
 function App() {
   const {
@@ -19,6 +19,7 @@ function App() {
     canvasPages,
     setPreviewMode,
     addCanvasPage,
+    isPreviewMode,
   } = useGrapesjsEditorStore();
 
   // Handle tailwind's use of slashes in css names
@@ -90,13 +91,16 @@ function App() {
     const domComponents = editor.DomComponents;
     // check for saved content
     const savedContent = JSON.parse(localStorage.getItem("MyCanvas"));
-    if (savedContent) {
+    console.log("getting savedContent:", savedContent);
+    if (savedContent && savedContent.components.length > 0) {
       editor.setComponents(savedContent.components);
     }
 
-    if (!savedContent) {
+    if (!savedContent || savedContent.components.length === 0) {
+      console.log(true);
       domComponents.addComponent({ type: "custom-page" });
       domComponents.addComponent({ type: "custom-divider" });
+      handleSave(editor);
     }
 
     // // check if editor instance exists
@@ -148,12 +152,24 @@ function App() {
     const savedContent = {
       components: components.toJSON(),
     };
+    console.log("setting savedContent:", savedContent);
     localStorage.setItem("MyCanvas", JSON.stringify(savedContent));
   };
+  // clear the canvas
+  const handleClear = (editor) => {
+    editor.setComponents([]);
+    localStorage.setItem("MyCanvas", "");
+  };
+
   return (
     <div>
       {/* Main editor component */}
-      <button onClick={() => handleSave(grapesjsEditor)}>Save</button>
+      {!isPreviewMode && (
+        <>
+          <button onClick={() => handleSave(grapesjsEditor)}>Save</button>
+          <button onClick={() => handleClear(grapesjsEditor)}>Clear</button>
+        </>
+      )}
       <GjsEditor
         grapesjs={GrapesJS}
         grapesjsCss="https://unpkg.com/grapesjs/dist/css/grapes.min.css"
@@ -167,7 +183,6 @@ function App() {
           },
 
           ReactCoreGrapesjs,
-          AddEventListeners,
         ]}
         onEditor={onEditor}
         options={{
@@ -235,6 +250,7 @@ function App() {
           )}
         </PagesProvider>
       </GjsEditor>
+      <Template />
     </div>
   );
 }

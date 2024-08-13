@@ -17,10 +17,14 @@ const CustomDivider = () => {
     // });
 
     // add new page to our zustand store
-    const newPage = addCanvasPage({
-      id: canvasPages.length + 1,
-      componentsList: [],
-    });
+    // const newPage = addCanvasPage({
+    //   id: canvasPages.length + 1,
+    //   componentsList: [],
+    // });
+    const domComponents = grapesjsEditor.DomComponents;
+
+    domComponents.addComponent({ type: "custom-page" });
+    domComponents.addComponent({ type: "custom-divider" });
   };
 
   return (
