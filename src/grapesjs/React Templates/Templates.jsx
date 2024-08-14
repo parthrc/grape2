@@ -17,11 +17,11 @@ const Template = () => {
   const renderPages = (component) => {
     // console.log("Inside render component = ", component);
     if (component.type === "custom-page") {
-      console.log("Page");
+      // console.log("Page");
       return (
         <div>
           {component.components?.map((child, index) => {
-            console.log("Child=", child);
+            // console.log("Child=", child);
             return <div key={index}>{renderPages(child)}</div>;
           })}
         </div>

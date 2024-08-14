@@ -11,42 +11,42 @@ const CustomPageComponent = (editor) => {
         attributes: { title: "Custom page", class: "custom-page" },
         // Default styles to make it visible and usable
         style: {
-          minHeight: "200px",
-          height: "200px",
+          minHeight: "100px",
+          height: "fit-content",
           // Ensures it's large enough to drop components into
           padding: "10px", // Adds space inside the component
-          border: "2px dashed #ccc", // Visual indication that something can be dropped here
-          backgroundColor: "#bb1515", // Light background to make it stand out
+          border: "2px dashed #bb1515", // Visual indication that something can be dropped here
         },
         // styles: `.custom-page {}`,
         draggable: false, // cannot drag this comp
         droppable: true, // can drop other comps inside
         components: [
           {
-            type: "text",
+            type: "deftext",
             content: "Drop your content here", // Default content
             style: { color: "#ccc", textAlign: "center", paddingTop: "80px" }, // Centered and light text
           },
         ],
       },
-    },
 
-    init() {
-      // Listen for changes in the 'components' property
-      this.listenTo(this.components(), "add", this.removePlaceholder);
-    },
+      init() {
+        // Listen for changes in the 'components' property
+        this.listenTo(this.components(), "add", this.removePlaceholder);
+      },
 
-    removePlaceholder() {
-      console.log("Inside listener");
-      // Find the placeholder text component and remove it
-      const placeholder = this.components().filter((comp) => {
-        return (
-          comp.get("type") === "text" &&
-          comp.get("content") === "Drop your content here"
-        );
-      });
+      removePlaceholder() {
+        console.log("Inside listener");
+        // Find the placeholder text component and remove it
+        const placeholder = this.components().filter((comp) => {
+          console.log("comp type", comp);
+          return (
+            comp.get("type") === "deftext" &&
+            comp.get("content") === "Drop your content here"
+          );
+        });
 
-      placeholder.forEach((comp) => this.components().remove(comp));
+        placeholder.forEach((comp) => this.components().remove(comp));
+      },
     },
 
     // View definition
