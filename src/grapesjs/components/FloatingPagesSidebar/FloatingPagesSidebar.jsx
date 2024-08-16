@@ -63,7 +63,7 @@ const FloatingPagesSidebar = ({ pages, selected, add, select, remove }) => {
     // console.log("use effect running");
     setPagesIds(
       canvasPages.map((page) => {
-        console.log(page);
+        // console.log(page);
         return page.index;
       })
     );

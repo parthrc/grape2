@@ -47,14 +47,14 @@ function App() {
     });
 
     // on any canvas update, update localStorage
-    editor.on("update", () => {
-      console.log("Canvas updated");
-      handleSave(editor);
-    });
+    // editor.on("update", () => {
+    //   console.log("Canvas updated");
+    //   handleSave(editor);
+    // });
 
-    // fired when children of any component updates
-    editor.on("component:update:components", (component) => {
-      console.log("comp inside update", component);
+    // fired when any component updates
+    editor.on("component:update", (component) => {
+      console.log("component update event fired type=", component.get("type"));
       // for custom-page updates
       if (component.get("type") === "custom-page") {
         // get the index of the page in which udpate happened
@@ -63,12 +63,37 @@ function App() {
 
         const updatedPage = {
           index: component.getTrait("index")?.get("value"),
-          component: component.toJSON(),
+          components: component.components().models,
         };
+        console.log("Updated page=", updatedPage);
+        console.log("jSON=", component.components().models);
+
+        // console.log("jSON=", component.getComponents());
         // Update Zustand store
         updateCanvasPage(updatedPage);
+        handleSave(editor);
+        return;
       }
+      console.log(" component event fired not custom page");
     });
+
+    // editor.on("component:add", (component) => {
+    //   // const parentPage = component.closest("[type='custom-page']");
+
+    //   if (component.get("type") === "custom-page") {
+    //     console.log("Component added inside a custom-page:", component);
+    //     const pageIndex = component.getTrait("index")?.get("value");
+
+    //     const updatedPage = {
+    //       index: pageIndex,
+    //       component: component.components(),
+    //     };
+
+    //     // Update Zustand store
+    //     updateCanvasPage(updatedPage);
+    //     handleSave(editor);
+    //   }
+    // });
 
     // Add components to as Blocks...
 
@@ -109,6 +134,7 @@ function App() {
     const editor = grapesjsEditor;
     if (!editor) return;
     const domComponents = editor.DomComponents;
+    if (!domComponents) return; // Ensure domComponents is defined
 
     // clear canvas
     domComponents.clear();
@@ -116,16 +142,20 @@ function App() {
     // if we have saved content in localstorage
     // create canvasPages  by looping through all components
     // we just get all custom-page comps and add them to the canvasPages array, only if they have children (are not blank)
-    const savedContent = JSON.parse(localStorage.getItem("MyCanvas"));
+    // const savedContent = JSON.parse(localStorage.getItem("MyCanvas"));
+    const savedContent = JSON.parse(localStorage.getItem("MyCanvas")) || {
+      allPages: [],
+    };
+
     console.log("saved content", savedContent.allPages);
-    // if (savedContent.allPages && canvasPages.length === 0) {
-    //   savedContent.allPages.map((page, index) => {
-    //     addCanvasPage({
-    //       index,
-    //       content: page.components,
-    //     });
-    //   });
-    // }
+    if (savedContent.allPages && canvasPages.length === 0) {
+      savedContent.allPages.map((page, index) => {
+        addCanvasPage({
+          index,
+          components: page.components,
+        });
+      });
+    }
 
     // render from canvasPages
     // if no page exist add a new page
@@ -142,14 +172,16 @@ function App() {
 
     // when we have pages
     if (canvasPages.length > 0) {
+      console.log("RENDERING ALL PAGES");
       canvasPages.map((page) => {
         // render only if not empty
         // has children components
         // if it has children
-        if (page.component) {
+        console.log("Main RENDER=", page);
+        if (page.components) {
           domComponents.addComponent({
             type: "custom-page",
-            content: page.component,
+            components: page.components,
             traits: [
               {
                 label: "Index",
