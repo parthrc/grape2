@@ -9,15 +9,16 @@ const CustomPageComponent = (editor) => {
       defaults: {
         tagName: "div",
         attributes: { title: "Custom page", class: "custom-page" },
-        // Default styles to make it visible and usable
+        // traits
+        traits: [{ label: "Index", type: "number", name: "index" }],
+        // default styles to make it visible
         style: {
           minHeight: "100px",
           height: "fit-content",
-          // Ensures it's large enough to drop components into
-          padding: "10px", // Adds space inside the component
-          border: "2px dashed #bb1515", // Visual indication that something can be dropped here
+          // giving some height, to make it easy to drop comps inside
+          padding: "10px",
+          border: "2px dashed #bb1515",
         },
-        // styles: `.custom-page {}`,
         draggable: false, // cannot drag this comp
         droppable: true, // can drop other comps inside
         components: [

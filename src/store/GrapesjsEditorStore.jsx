@@ -7,12 +7,16 @@ const useGrapesjsEditorStore = create((set) => ({
   setAvailableBlocks: (blocks) => set({ availableBlocks: blocks }),
   tiptapEditor: null,
   setTiptapEditor: (editor) => set({ tiptapEditor: editor }),
-  // List of pages in the canvas
   canvasPages: [],
   setCanvasPages: (canvasPages) => set({ canvasPages }),
   addCanvasPage: (page) =>
     set((state) => ({ canvasPages: [...state.canvasPages, page] })),
-
+  updateCanvasPage: (updatedPage) =>
+    set((state) => ({
+      canvasPages: state.canvasPages.map((page) =>
+        page.index === updatedPage.index ? updatedPage : page
+      ),
+    })),
   isPreviewMode: false,
   setPreviewMode: (isPreview) => set({ isPreviewMode: isPreview }),
 }));

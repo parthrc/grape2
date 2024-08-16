@@ -64,7 +64,7 @@ const FloatingPagesSidebar = ({ pages, selected, add, select, remove }) => {
     setPagesIds(
       canvasPages.map((page) => {
         console.log(page);
-        return page.id;
+        return page.index;
       })
     );
   }, [canvasPages]);
@@ -73,7 +73,7 @@ const FloatingPagesSidebar = ({ pages, selected, add, select, remove }) => {
   // const pagesIds = useMemo(() => {
   //   console.log("Inside memo canvasPages");
 
-  //   return canvasPages.map((page) => page.id);
+  //   return canvasPages.map((page) => page.index);
   // }, [canvasPages]);
 
   // track current dragged sidebar item
@@ -138,11 +138,11 @@ const FloatingPagesSidebar = ({ pages, selected, add, select, remove }) => {
     console.log("Now running setCanvasPages");
     //find index of currently dragged element in our STATE canvasPages
     const activeItemIndex = canvasPages.findIndex(
-      (page) => page.id === activeSidebarItemId
+      (page) => page.index === activeSidebarItemId
     );
     // find index of the current over item in canvasPages
     const activeOverIndex = canvasPages.findIndex(
-      (page) => page.id === activeOverItemId
+      (page) => page.index === activeOverItemId
     );
     //arrayMove is dnd-kit function which is used to swap places of two elements in an array
     console.log("canvasPages before arrayMove", canvasPages);
@@ -192,7 +192,7 @@ const FloatingPagesSidebar = ({ pages, selected, add, select, remove }) => {
                   {canvasPages.map((page) => {
                     console.log(page);
                     return (
-                      <SidebarItem key={page.id} page={page}></SidebarItem>
+                      <SidebarItem key={page.index} page={page}></SidebarItem>
                     );
                   })}
                 </SortableContext>

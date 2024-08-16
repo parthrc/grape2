@@ -2,6 +2,7 @@ import { FaPlus } from "react-icons/fa";
 import { FaWandMagicSparkles } from "react-icons/fa6";
 import { FaChevronDown } from "react-icons/fa";
 import useGrapesjsEditorStore from "../../../store/GrapesjsEditorStore.jsx";
+import CustomPageComponent from "../../CustomTypes/CustomPageType/CustomPage.jsx";
 
 const CustomDivider = () => {
   const { grapesjsEditor, addCanvasPage, canvasPages } =
@@ -17,14 +18,14 @@ const CustomDivider = () => {
     // });
 
     // add new page to our zustand store
-    // const newPage = addCanvasPage({
-    //   id: canvasPages.length + 1,
-    //   componentsList: [],
-    // });
-    const domComponents = grapesjsEditor.DomComponents;
+    const newPage = addCanvasPage({
+      index: canvasPages.length + 1,
+      content: "",
+    });
+    // const domComponents = grapesjsEditor.DomComponents;
 
-    domComponents.addComponent({ type: "custom-page" });
-    domComponents.addComponent({ type: "custom-divider" });
+    // domComponents.addComponent({ type: "custom-page" });
+    // domComponents.addComponent({ type: "custom-divider" });
   };
 
   return (

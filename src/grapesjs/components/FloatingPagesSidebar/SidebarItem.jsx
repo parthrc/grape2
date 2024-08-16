@@ -37,7 +37,7 @@ const SidebarItem = ({ page }) => {
       {...listeners}
       style={styles.pagesOverviewItem}
     >
-      {page.id}
+      {page.index}
     </div>
   );
 };

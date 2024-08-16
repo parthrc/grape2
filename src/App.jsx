@@ -20,6 +20,8 @@ function App() {
     setPreviewMode,
     addCanvasPage,
     isPreviewMode,
+    setCanvasPages,
+    updateCanvasPage,
   } = useGrapesjsEditorStore();
 
   // Handle tailwind's use of slashes in css names
@@ -48,6 +50,24 @@ function App() {
     editor.on("update", () => {
       console.log("Canvas updated");
       handleSave(editor);
+    });
+
+    // fired when children of any component updates
+    editor.on("component:update:components", (component) => {
+      console.log("comp inside update", component);
+      // for custom-page updates
+      if (component.get("type") === "custom-page") {
+        // get the index of the page in which udpate happened
+        const pageIndex = component.getTrait("index")?.get("value");
+        console.log("Current page updated=", pageIndex);
+
+        const updatedPage = {
+          index: component.getTrait("index")?.get("value"),
+          component: component.toJSON(),
+        };
+        // Update Zustand store
+        updateCanvasPage(updatedPage);
+      }
     });
 
     // Add components to as Blocks...
@@ -89,19 +109,88 @@ function App() {
     const editor = grapesjsEditor;
     if (!editor) return;
     const domComponents = editor.DomComponents;
-    // check for saved content
+
+    // clear canvas
+    domComponents.clear();
+    // setCanvasPages([]);
+    // if we have saved content in localstorage
+    // create canvasPages  by looping through all components
+    // we just get all custom-page comps and add them to the canvasPages array, only if they have children (are not blank)
     const savedContent = JSON.parse(localStorage.getItem("MyCanvas"));
-    console.log("getting savedContent:", savedContent);
-    if (savedContent && savedContent.components.length > 0) {
-      editor.setComponents(savedContent.components);
+    console.log("saved content", savedContent.allPages);
+    // if (savedContent.allPages && canvasPages.length === 0) {
+    //   savedContent.allPages.map((page, index) => {
+    //     addCanvasPage({
+    //       index,
+    //       content: page.components,
+    //     });
+    //   });
+    // }
+
+    // render from canvasPages
+    // if no page exist add a new page
+    if (canvasPages.length === 0) {
+      console.log("Zero pages");
+      addCanvasPage({
+        index: canvasPages.length + 1,
+      });
+      return;
+    }
+    // if pages exist
+    // render each page
+    // render if it has children or else dont
+
+    // when we have pages
+    if (canvasPages.length > 0) {
+      canvasPages.map((page) => {
+        // render only if not empty
+        // has children components
+        // if it has children
+        if (page.component) {
+          domComponents.addComponent({
+            type: "custom-page",
+            content: page.component,
+            traits: [
+              {
+                label: "Index",
+                type: "number",
+                name: "index",
+                value: page.index,
+              },
+            ],
+          });
+          domComponents.addComponent({ type: "custom-divider" });
+          return;
+        }
+        // if empty page
+        domComponents.addComponent({
+          type: "custom-page",
+          traits: [
+            {
+              label: "Index",
+              type: "number",
+              name: "index",
+              value: page.index,
+            },
+          ],
+        });
+        domComponents.addComponent({ type: "custom-divider" });
+      });
     }
 
-    if (!savedContent || savedContent.components.length === 0) {
-      console.log(true);
-      domComponents.addComponent({ type: "custom-page" });
-      domComponents.addComponent({ type: "custom-divider" });
-      handleSave(editor);
-    }
+    // check for saved content
+    // const savedContent = JSON.parse(localStorage.getItem("MyCanvas"));
+    // console.log("getting savedContent:", savedContent);
+    // if (savedContent && savedContent.components.length > 0) {
+    //   editor.setComponents(savedContent.components);
+    // }
+
+    // if (!savedContent || savedContent.components.length === 0) {
+    //   console.log(true);
+    //   domComponents.addComponent({ type: "custom-page" });
+    //   domComponents.addComponent({ type: "custom-divider" });
+    //   handleSave(editor);
+    // }
 
     // // check if editor instance exists
     // // check if there are pages in the canvas
@@ -150,7 +239,7 @@ function App() {
     // }
     const components = editor.getComponents();
     const savedContent = {
-      components: components.toJSON(),
+      allPages: components.toJSON(),
     };
     console.log("setting savedContent:", savedContent);
     localStorage.setItem("MyCanvas", JSON.stringify(savedContent));
