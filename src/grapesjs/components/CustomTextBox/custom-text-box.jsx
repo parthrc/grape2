@@ -1,15 +1,29 @@
-import React, { useCallback, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import Tiptap from "../../../tiptap/tiptap.jsx";
 import SlashMenu from "../SlashMenu/SlashMenu.jsx";
 import useGrapesjsEditorStore from "../../../store/GrapesjsEditorStore.jsx";
 import { sliceUntilSlash } from "../../../utils/random.js";
 
-const CustomTextBox = () => {
+const CustomTextBox = ({ editor, ...props }) => {
   // State to manage slash menu visibility
   const [showMenu, setShowMenu] = useState(false);
   const [query, setQuery] = useState("");
+  // state for content of tiptap editor
+  const [tiptapContent, setTiptapContent] = useState("hello");
   // ref for slash menu
   const slashMenuRef = useRef(null);
+
+  // get saved content from traits
+  useEffect(() => {
+    if (editor) {
+      // get currently selected component
+      const comp = editor.getSelected();
+      // run only if currently selected component is custom-page
+      if (comp && comp.attributes.type === "custom-page") {
+        setTiptapContent(comp.getTrait("content").get("value"));
+      }
+    }
+  }, [editor]);
 
   // get tiptapEditor isntance from zustand
   const { tiptapEditor } = useGrapesjsEditorStore();
@@ -23,6 +37,24 @@ const CustomTextBox = () => {
   const handleQueryChange = useCallback((newQuery) => {
     setQuery(newQuery);
   }, []);
+
+  const handleContentChange = (newContent) => {
+    console.log("handleCotentChange fired");
+    setTiptapContent(newContent);
+    console.log("Editor isntance=", editor);
+    if (editor) {
+      const comp = editor.getSelected();
+      if (comp) {
+        console.log("Comp==", comp);
+        const contentTrait = comp.getTrait("content");
+        if (contentTrait) {
+          contentTrait.set("value", newContent);
+        }
+      } else {
+        console.log("No component is selected in GrapesJS editor.");
+      }
+    }
+  };
 
   // handle fixed-menu actions
   const handleMenuAction = (action) => {
@@ -87,7 +119,8 @@ const CustomTextBox = () => {
         <Tiptap
           onToggleMenu={handleToggleMenu}
           onQueryChange={handleQueryChange}
-          
+          content={tiptapContent}
+          onContentChange={handleContentChange}
         />
       </div>
       {showMenu && (

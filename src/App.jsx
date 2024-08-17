@@ -53,47 +53,74 @@ function App() {
     // });
 
     // fired when any component updates
-    editor.on("component:update", (component) => {
-      console.log("component update event fired type=", component.get("type"));
-      // for custom-page updates
-      if (component.get("type") === "custom-page") {
-        // get the index of the page in which udpate happened
-        const pageIndex = component.getTrait("index")?.get("value");
-        console.log("Current page updated=", pageIndex);
-
-        const updatedPage = {
-          index: component.getTrait("index")?.get("value"),
-          components: component.components().models,
-        };
-        console.log("Updated page=", updatedPage);
-        console.log("jSON=", component.components().models);
-
-        // console.log("jSON=", component.getComponents());
-        // Update Zustand store
-        updateCanvasPage(updatedPage);
-        handleSave(editor);
-        return;
-      }
-      console.log(" component event fired not custom page");
-    });
-
-    // editor.on("component:add", (component) => {
-    //   // const parentPage = component.closest("[type='custom-page']");
-
+    // editor.on("component:update", (component) => {
+    //   console.log("component update event fired type=", component.get("type"));
+    //   // for custom-page updates
     //   if (component.get("type") === "custom-page") {
-    //     console.log("Component added inside a custom-page:", component);
+    //     // get the index of the page in which udpate happened
     //     const pageIndex = component.getTrait("index")?.get("value");
+    //     console.log("Current page updated=", pageIndex);
 
     //     const updatedPage = {
-    //       index: pageIndex,
-    //       component: component.components(),
+    //       index: component.getTrait("index")?.get("value"),
+    //       components: component.components().models,
     //     };
+    //     console.log("Updated page=", updatedPage);
+    //     console.log("jSON=", component.components().models);
 
+    //     // console.log("jSON=", component.getComponents());
     //     // Update Zustand store
     //     updateCanvasPage(updatedPage);
     //     handleSave(editor);
+    //     return;
     //   }
+    //   console.log(" component event fired not custom page");
     // });
+
+    let isUpdating = false;
+
+    editor.on("component:add", (component) => {
+      // Avoid running the logic if already updating to prevent an infinite loop
+      if (isUpdating) return;
+
+      console.log("Component ADD fired", component.get("type"));
+      console.log("Added comp Parent", component.parent().get("type"));
+
+      const compParent = component.parent();
+
+      // Check if the added component is inside a "custom-page" component
+      if (compParent.get("type") === "custom-page") {
+        console.log(
+          "Component added inside a custom-page:",
+          component.attributes.type
+        );
+        const pageIndex = compParent.getTrait("index")?.get("value");
+
+        const updatedPage = {
+          index: pageIndex,
+          content: compParent.components().models,
+        };
+
+        // Check if the updated page already exists at the specified index
+        const exists = canvasPages.some((i) => {
+          return (
+            i.index === updatedPage.index &&
+            JSON.stringify(i.content) === JSON.stringify(updatedPage.content)
+          );
+        });
+
+        if (!exists) {
+          isUpdating = true; // Set the flag to indicate that an update is in progress
+          try {
+            // Update Zustand store
+            updateCanvasPage(updatedPage);
+            handleSave(editor);
+          } finally {
+            isUpdating = false; // Reset the flag after the update is complete
+          }
+        }
+      }
+    });
 
     // Add components to as Blocks...
 
@@ -129,7 +156,7 @@ function App() {
     // we need to programmatically render the canvas
   };
 
-  // useEffect to render all apges in teh canvas
+  // useEffect to render all pges in the canvas
   useEffect(() => {
     const editor = grapesjsEditor;
     if (!editor) return;
@@ -143,19 +170,27 @@ function App() {
     // create canvasPages  by looping through all components
     // we just get all custom-page comps and add them to the canvasPages array, only if they have children (are not blank)
     // const savedContent = JSON.parse(localStorage.getItem("MyCanvas"));
-    const savedContent = JSON.parse(localStorage.getItem("MyCanvas")) || {
-      allPages: [],
-    };
+    const savedContent = localStorage.getItem("MyCanvas");
 
-    console.log("saved content", savedContent.allPages);
-    if (savedContent.allPages && canvasPages.length === 0) {
-      savedContent.allPages.map((page, index) => {
-        addCanvasPage({
-          index,
-          components: page.components,
-        });
-      });
+    let parsedContent = null;
+
+    if (savedContent) {
+      try {
+        parsedContent = JSON.parse(savedContent);
+      } catch (error) {
+        console.error("Error parsing JSON:", error);
+      }
     }
+
+    // updte local state of canvasPgeas absed on localStorage
+    // if (parsedContent && parsedContent.allPages && canvasPages.length === 0) {
+    //   parsedContent.allPages.map((page, index) => {
+    //     addCanvasPage({
+    //       index,
+    //       content: page.components,
+    //     });
+    //   });
+    // }
 
     // render from canvasPages
     // if no page exist add a new page
@@ -178,10 +213,11 @@ function App() {
         // has children components
         // if it has children
         console.log("Main RENDER=", page);
-        if (page.components) {
+        if (page.content && page.content.length > 0) {
+          console.log("page has content");
           domComponents.addComponent({
             type: "custom-page",
-            components: page.components,
+            components: page.content,
             traits: [
               {
                 label: "Index",
@@ -269,17 +305,19 @@ function App() {
     //   localStorage.setItem("MyCanvas", JSON.stringify(savedContent));
     //   return;
     // }
-    const components = editor.getComponents();
+    // const components = editor.getComponents();
+    console.log("Canvas pages before saving=", canvasPages);
     const savedContent = {
-      allPages: components.toJSON(),
+      allPages: canvasPages,
     };
     console.log("setting savedContent:", savedContent);
     localStorage.setItem("MyCanvas", JSON.stringify(savedContent));
   };
-  // clear the canvas
+  // clear the canvas & lcoalStorage
   const handleClear = (editor) => {
     editor.setComponents([]);
     localStorage.setItem("MyCanvas", "");
+    localStorage.setItem("grapesjs-editor-store", "");
   };
 
   return (

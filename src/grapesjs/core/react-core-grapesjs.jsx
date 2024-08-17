@@ -104,8 +104,13 @@ const ReactCoreGrapesjs = (editor) => {
     model: {
       ...coreReactModel,
       defaults: {
-        component: CustomTextBox,
+        component: (props) => <CustomTextBox {...props} editor={editor} />, // Pass the editor as a prop,
         tagName: "div",
+        // traits
+        traits: [
+          { label: "Content", type: "text", name: "content", value: "hello" },
+        ],
+
         draggable: true,
         droppable: true,
         editable: false,
@@ -139,6 +144,15 @@ const ReactCoreGrapesjs = (editor) => {
       ...coreReactModel,
       defaults: {
         component: CustomDivider,
+        style: {
+          minHeight: "100px",
+          height: "fit-content",
+          // giving some height, to make it easy to drop comps inside
+          padding: "10px",
+          border: "2px dashed #6c10e6",
+          margin: "10px",
+          bgColor: "green",
+        },
         draggable: true,
         droppable: true,
         editable: false,

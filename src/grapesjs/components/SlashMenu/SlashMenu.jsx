@@ -8,6 +8,7 @@ const SlashMenu = ({ handleMenuAction, query, handleMenuItemClick }) => {
 
   //ahndler
   const handleOnClickSlashMenuItem = (block) => {
+    // addComponentNextToSelected(grapesjsEditor);
     // check type of clicked item and proceed accordingly
 
     // if custom component

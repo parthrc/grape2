@@ -4,7 +4,7 @@ import Placeholder from "@tiptap/extension-placeholder";
 import useGrapesjsEditorStore from "../store/GrapesjsEditorStore.jsx";
 import { useEffect } from "react";
 
-const Tiptap = ({ onToggleMenu, onQueryChange }) => {
+const Tiptap = ({ onToggleMenu, onQueryChange, content, onContentChange }) => {
   const { setTiptapEditor, isPreviewMode } = useGrapesjsEditorStore();
   const tiptapEditor = useEditor({
     extensions: [
@@ -14,7 +14,8 @@ const Tiptap = ({ onToggleMenu, onQueryChange }) => {
         placeholder: `start typing or use "/" for commands...`,
       }),
     ],
-    // content: ``,
+    content: content,
+
     editorProps: {
       attributes: {
         class: "customTiptapInput",
@@ -51,11 +52,15 @@ const Tiptap = ({ onToggleMenu, onQueryChange }) => {
         onToggleMenu(false);
       }
       console.log("tiptap updated: ", text);
+
+      // Pass the updated content back to the parent component
+      onContentChange(editor.getHTML());
     },
   });
 
   // set tiptapEditor isnatnce to zustand
   useEffect(() => {
+    console.log("Content inside tiptap=", content);
     if (tiptapEditor) {
       setTiptapEditor(tiptapEditor);
       // set editable status of tiptap based on previewMode

@@ -8,9 +8,19 @@ const Template = () => {
   const [content, setContent] = useState([]);
 
   useEffect(() => {
-    const savedContent = JSON.parse(localStorage.getItem("MyCanvas"));
+    const savedContent = localStorage.getItem("MyCanvas");
+
+    let parsedContent = null;
+
     if (savedContent) {
-      setContent(savedContent.components);
+      try {
+        parsedContent = JSON.parse(savedContent);
+      } catch (error) {
+        console.error("Error parsing JSON:", error);
+      }
+    }
+    if (parsedContent) {
+      setContent(parsedContent.components);
     }
   }, []);
 
