@@ -17,33 +17,24 @@ const HardbreakExtended = HardBreak.extend({
         );
 
         // Check if the bullet list is active, add custom textbox with bullet active
-        // if (editor.isActive("bulletList")) {
-        //   console.log(
-        //     "Bullet list is active, adding a new custom-text-box with bullet list enabled"
-        //   );
+        if (editor.isActive("bulletList")) {
+          console.log(
+            "Bullet list is active, adding a new custom-text-box with bullet list enabled"
+          );
 
-        //   if (grapesjsEditor) {
-        //     // Add a new custom-text-box component with the bullet list active
-        //     const comp = editor.getSelected();
-        //     if (comp) {
-        //       const newComponent = editor.addComponents({
-        //         type: "custom-text-box",
-        //         content: "<ul>" + currentContent + "</ul>", // Pass the bullet list content
-        //         props: { isBulletList: true }, // Pass the flag
-        //       });
+          if (grapesjsEditor) {
+            // Add a new custom-text-box component with the bullet list active
+            grapesjsEditor.addComponents({
+              type: "custom-text-box",
+              // handle initializing tiptap with bullet list active
+              attributes: { isBulletList: true },
+            });
+          } else {
+            console.log("GrapesJS Editor instance is not available.");
+          }
 
-        //       const parent = comp.parent();
-        //       const index = parent.components().indexOf(comp);
-        //       parent.components().add(newComponent, { at: index + 1 });
-
-        //       editor.select(newComponent);
-        //     }
-        //   } else {
-        //     console.log("GrapesJS Editor instance is not available.");
-        //   }
-
-        //   return true; // Prevent default behavior, since we're handling it customly
-        // }
+          return true; // Prevent default behavior, since we're handling it customly
+        }
 
         // custom enter key behavior when bullet list is not active
         if (grapesjsEditor !== null && grapesjsEditor !== undefined) {
