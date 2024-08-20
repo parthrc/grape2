@@ -84,7 +84,13 @@ const HardbreakExtended = HardBreak.extend({
         // custom enter key behavior when bullet list is not active
         if (grapesjsEditor !== null && grapesjsEditor !== undefined) {
           console.log("GrapesJS Editor instance is valid:", grapesjsEditor);
-          grapesjsEditor.addComponents({ type: "custom-text-box" });
+          const newComponent = grapesjsEditor.addComponents({
+            type: "custom-text-box",
+          });
+
+          addComponentNextToSelected(grapesjsEditor, newComponent);
+          // Focus on the newly added component
+          grapesjsEditor.select(newComponent);
         } else {
           console.log("GrapesJS Editor instance is not available.");
         }
