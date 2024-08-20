@@ -4,7 +4,8 @@ import SlashMenu from "../SlashMenu/SlashMenu.jsx";
 import useGrapesjsEditorStore from "../../../store/GrapesjsEditorStore.jsx";
 import { sliceUntilSlash } from "../../../utils/random.js";
 
-const CustomTextBox = ({ editor, style }) => {
+const CustomTextBox = ({ editor, style, isBulletList }) => {
+  console.log("isBulletList flag inside custom-text-box", isBulletList);
   // State to manage slash menu visibility
   const [showMenu, setShowMenu] = useState(false);
   const [query, setQuery] = useState("");
@@ -107,6 +108,7 @@ const CustomTextBox = ({ editor, style }) => {
           const newComponent = editor.addComponents({
             type: "custom-text-box",
             content: "<ul>" + currentContent + "</ul>", // Pass the bullet list content
+            props: { isBulletList: true }, // Pass the flag
           });
 
           const parent = comp.parent();
@@ -144,6 +146,7 @@ const CustomTextBox = ({ editor, style }) => {
           content={tiptapContent}
           onContentChange={handleContentChange}
           grapesjsEditor={grapesjsEditor}
+          isBulletList={isBulletList}
         />
       </div>
       {showMenu && (
