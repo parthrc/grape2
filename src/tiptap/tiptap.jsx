@@ -3,16 +3,29 @@ import StarterKit from "@tiptap/starter-kit";
 import Placeholder from "@tiptap/extension-placeholder";
 import useGrapesjsEditorStore from "../store/GrapesjsEditorStore.jsx";
 import { useEffect } from "react";
+import HardBreak from "@tiptap/extension-hard-break";
+import HardbreakExtended from "./plugins/HardbreakExtension.jsx";
 
-const Tiptap = ({ onToggleMenu, onQueryChange, content, onContentChange }) => {
+const Tiptap = ({
+  onToggleMenu,
+  onQueryChange,
+  content,
+  onContentChange,
+  onEnterPress,
+  grapesjsEditor,
+}) => {
+  // console.log("Editor inside the TIPTAP component,", grapesjsEditor);
   const { setTiptapEditor, isPreviewMode } = useGrapesjsEditorStore();
   const tiptapEditor = useEditor({
     extensions: [
       StarterKit,
-      // CustomEnterExtension,
-      Placeholder.configure({
-        placeholder: `start typing or use "/" for commands...`,
+      HardbreakExtended.configure({
+        grapesjsEditor: grapesjsEditor,
       }),
+      // CustomEnterExtension,
+      // Placeholder.configure({
+      //   placeholder: `start typing or use "/" for commands...`,
+      // }),
     ],
     content: content,
 
@@ -30,18 +43,10 @@ const Tiptap = ({ onToggleMenu, onQueryChange, content, onContentChange }) => {
       // grapesjsEditor.addComponents({ type: "custom-text-box" });
     },
     // onUpdate function, runs on every keystroke
-    // onUpdate({ editor }) {
-    //   const text = editor.getText();
-    //   const lastChar = text.slice(-1);
-    //   if (lastChar === "/") {
-    //     onToggleMenu(true);
-    //   } else {
-    //     onToggleMenu(false);
-    //   }
-    //   console.log("tiptap updated: ", text);
-    // },
+
     onUpdate({ editor }) {
       const text = editor.getText();
+      // get index of slash
       const lastSlashIndex = text.lastIndexOf("/");
       if (lastSlashIndex !== -1) {
         const query = text.substring(lastSlashIndex + 1);
@@ -56,6 +61,21 @@ const Tiptap = ({ onToggleMenu, onQueryChange, content, onContentChange }) => {
       // Pass the updated content back to the parent component
       onContentChange(editor.getHTML());
     },
+
+    // Adding custom keyboard shortcuts using addKeyboardShortcuts
+    addKeyboardShortcuts() {
+      console.log("addKeyboardShortcuts called");
+      return {
+        Enter: ({ editor }) => {
+          console.log("ENter key pressed");
+          if (editor.isActive("bulletList")) {
+            onEnterPress(editor.getHTML()); // Call the handler passed as a prop
+            return true; // Prevent default behavior
+          }
+          return false;
+        },
+      };
+    },
   });
 
   // set tiptapEditor isnatnce to zustand
@@ -66,7 +86,7 @@ const Tiptap = ({ onToggleMenu, onQueryChange, content, onContentChange }) => {
       // set editable status of tiptap based on previewMode
       tiptapEditor.setEditable(!isPreviewMode);
     }
-  }, [tiptapEditor, setTiptapEditor, isPreviewMode]);
+  }, [tiptapEditor, setTiptapEditor, isPreviewMode, content]);
 
   return (
     <div className="tiptap-container">

@@ -4,7 +4,7 @@ import SlashMenu from "../SlashMenu/SlashMenu.jsx";
 import useGrapesjsEditorStore from "../../../store/GrapesjsEditorStore.jsx";
 import { sliceUntilSlash } from "../../../utils/random.js";
 
-const CustomTextBox = ({ editor, ...props }) => {
+const CustomTextBox = ({ editor, style }) => {
   // State to manage slash menu visibility
   const [showMenu, setShowMenu] = useState(false);
   const [query, setQuery] = useState("");
@@ -26,7 +26,7 @@ const CustomTextBox = ({ editor, ...props }) => {
   }, [editor]);
 
   // get tiptapEditor isntance from zustand
-  const { tiptapEditor } = useGrapesjsEditorStore();
+  const { tiptapEditor, grapesjsEditor } = useGrapesjsEditorStore();
 
   // handle toggle of slashmenu
   const handleToggleMenu = useCallback((show) => {
@@ -41,11 +41,11 @@ const CustomTextBox = ({ editor, ...props }) => {
   const handleContentChange = (newContent) => {
     console.log("handleCotentChange fired");
     setTiptapContent(newContent);
-    console.log("Editor isntance=", editor);
+    // console.log("Editor isntance=", editor);
     if (editor) {
       const comp = editor.getSelected();
       if (comp) {
-        console.log("Comp==", comp);
+        // console.log("Comp==", comp);
         const contentTrait = comp.getTrait("content");
         if (contentTrait) {
           contentTrait.set("value", newContent);
@@ -98,6 +98,28 @@ const CustomTextBox = ({ editor, ...props }) => {
     }
   };
 
+  // handle custom behaviour for bullet list
+  const handleEnterPress = useCallback(
+    (currentContent) => {
+      if (editor) {
+        const comp = editor.getSelected();
+        if (comp) {
+          const newComponent = editor.addComponents({
+            type: "custom-text-box",
+            content: "<ul>" + currentContent + "</ul>", // Pass the bullet list content
+          });
+
+          const parent = comp.parent();
+          const index = parent.components().indexOf(comp);
+          parent.components().add(newComponent, { at: index + 1 });
+
+          editor.select(newComponent);
+        }
+      }
+    },
+    [editor]
+  );
+
   const styles = {
     container: {
       border: "1px solid black",
@@ -121,6 +143,7 @@ const CustomTextBox = ({ editor, ...props }) => {
           onQueryChange={handleQueryChange}
           content={tiptapContent}
           onContentChange={handleContentChange}
+          grapesjsEditor={grapesjsEditor}
         />
       </div>
       {showMenu && (

@@ -34,6 +34,8 @@ function App() {
     // set editor isntance to zustand store
     if (editor) setGrapesjsEditor(editor);
 
+    editor.addComponents({ type: "custom-text-box" });
+
     // commands
     // when previwe mode is true
     editor.on("run:core:preview", () => {
@@ -68,6 +70,17 @@ function App() {
     //     console.log("Updated page=", updatedPage);
     //     console.log("jSON=", component.components().models);
 
+    //     // check if page is updated
+    //     // check if canvasPages alreadyahs the updated page with all children
+    //     const exists = canvasPages.map((page) => {
+    //       console.log("Page", page);
+    //       if (page === updatedPage) {
+    //         return true;
+    //       }
+    //       return false;
+    //     });
+    //     console.log("Exists = ", exists);
+
     //     // console.log("jSON=", component.getComponents());
     //     // Update Zustand store
     //     updateCanvasPage(updatedPage);
@@ -77,57 +90,63 @@ function App() {
     //   console.log(" component event fired not custom page");
     // });
 
-    let isUpdating = false;
+    // let isUpdating = false;
 
-    editor.on("component:add", (component) => {
-      // Avoid running the logic if already updating to prevent an infinite loop
-      if (isUpdating) return;
+    // editor.on("component:add", (component) => {
+    //   // Avoid running the logic if already updating to prevent an infinite loop
+    //   if (isUpdating) return;
 
-      console.log("Component ADD fired", component.get("type"));
-      console.log("Added comp Parent", component.parent().get("type"));
+    //   console.log("Component ADD fired", component.get("type"));
+    //   console.log("Added comp Parent", component.parent().get("type"));
 
-      const compParent = component.parent();
+    //   const compParent = component.parent();
 
-      // Check if the added component is inside a "custom-page" component
-      if (compParent.get("type") === "custom-page") {
-        console.log(
-          "Component added inside a custom-page:",
-          component.attributes.type
-        );
-        const pageIndex = compParent.getTrait("index")?.get("value");
+    //   // Check if the added component is inside a "custom-page" component
+    //   if (compParent.get("type") === "custom-page") {
+    //     console.log(
+    //       "Component added inside a custom-page:",
+    //       component.attributes.type
+    //     );
+    //     const pageIndex = compParent.getTrait("index")?.get("value");
 
-        const updatedPage = {
-          index: pageIndex,
-          content: compParent.components().models,
-        };
+    //     const updatedPage = {
+    //       index: pageIndex,
+    //       content: compParent.components().models,
+    //     };
+    //     console.log("updated page=", updatedPage);
 
-        // Check if the updated page already exists at the specified index
-        const exists = canvasPages.some((i) => {
-          return (
-            i.index === updatedPage.index &&
-            JSON.stringify(i.content) === JSON.stringify(updatedPage.content)
-          );
-        });
+    //     // Check if the updated page already exists at the specified index
+    //     const exists = canvasPages.some(
+    //       (i) =>
+    //         i.index === updatedPage.index &&
+    //         JSON.stringify(i.content) === JSON.stringify(updatedPage.content)
+    //     );
+    //     console.log("Exists = ", exists);
+    //     console.log("Not exists", !exists);
 
-        if (!exists) {
-          isUpdating = true; // Set the flag to indicate that an update is in progress
-          try {
-            // Update Zustand store
-            updateCanvasPage(updatedPage);
-            handleSave(editor);
-          } finally {
-            isUpdating = false; // Reset the flag after the update is complete
-          }
-        }
-      }
-    });
-
+    //     if (!exists) {
+    //       isUpdating = true; // Set the flag to indicate that an update is in progress
+    //       try {
+    //         console.log("try block exists");
+    //         // Update Zustand store
+    //         updateCanvasPage(updatedPage);
+    //         handleSave(editor);
+    //       } finally {
+    //         setTimeout(() => {
+    //           isUpdating = false; // Reset the flag after the update is complete
+    //         }, 0); // Use a small delay to avoid immediate re-triggering
+    //       }
+    //     }
+    //   }
+    // });
     // Add components to as Blocks...
 
     // initialize the slash menu
     let finalSlashMenuItems = [
       { label: "bullet", type: "rte" },
       { label: "h1", type: "rte" },
+      { label: "strike", type: "rte" },
+      { label: "italic", type: "rte" },
     ];
 
     // using Blocks API
@@ -157,141 +176,140 @@ function App() {
   };
 
   // useEffect to render all pges in the canvas
-  useEffect(() => {
-    const editor = grapesjsEditor;
-    if (!editor) return;
-    const domComponents = editor.DomComponents;
-    if (!domComponents) return; // Ensure domComponents is defined
+  // useEffect(() => {
+  //   const editor = grapesjsEditor;
+  //   if (!editor) return;
+  //   const domComponents = editor.DomComponents;
+  //   if (!domComponents) return; // Ensure domComponents is defined
 
-    // clear canvas
-    domComponents.clear();
-    // setCanvasPages([]);
-    // if we have saved content in localstorage
-    // create canvasPages  by looping through all components
-    // we just get all custom-page comps and add them to the canvasPages array, only if they have children (are not blank)
-    // const savedContent = JSON.parse(localStorage.getItem("MyCanvas"));
-    const savedContent = localStorage.getItem("MyCanvas");
+  //   // clear canvas
+  //   domComponents.clear();
+  //   // setCanvasPages([]);
+  //   // if we have saved content in localstorage
+  //   // create canvasPages  by looping through all components
+  //   // we just get all custom-page comps and add them to the canvasPages array, only if they have children (are not blank)
+  //   // const savedContent = JSON.parse(localStorage.getItem("MyCanvas"));
+  //   const savedContent = localStorage.getItem("MyCanvas");
 
-    let parsedContent = null;
+  //   let parsedContent = null;
 
-    if (savedContent) {
-      try {
-        parsedContent = JSON.parse(savedContent);
-      } catch (error) {
-        console.error("Error parsing JSON:", error);
-      }
-    }
+  //   if (savedContent) {
+  //     try {
+  //       parsedContent = JSON.parse(savedContent);
+  //     } catch (error) {
+  //       console.error("Error parsing JSON:", error);
+  //     }
+  //   }
 
-    // updte local state of canvasPgeas absed on localStorage
-    // if (parsedContent && parsedContent.allPages && canvasPages.length === 0) {
-    //   parsedContent.allPages.map((page, index) => {
-    //     addCanvasPage({
-    //       index,
-    //       content: page.components,
-    //     });
-    //   });
-    // }
+  //   // updte local state of canvasPgeas absed on localStorage
+  //   // if (parsedContent && parsedContent.allPages && canvasPages.length === 0) {
+  //   //   parsedContent.allPages.map((page, index) => {
+  //   //     addCanvasPage({
+  //   //       index,
+  //   //       content: page.components,
+  //   //     });
+  //   //   });
+  //   // }
 
-    // render from canvasPages
-    // if no page exist add a new page
-    if (canvasPages.length === 0) {
-      console.log("Zero pages");
-      addCanvasPage({
-        index: canvasPages.length + 1,
-      });
-      return;
-    }
-    // if pages exist
-    // render each page
-    // render if it has children or else dont
+  //   // render from canvasPages
+  //   // if no page exist add a new page
+  //   if (canvasPages.length === 0) {
+  //     console.log("Zero pages");
+  //     addCanvasPage({
+  //       index: canvasPages.length + 1,
+  //     });
+  //     return;
+  //   }
+  //   // if pages exist
+  //   // render each page
+  //   // render if it has children or else dont
 
-    // when we have pages
-    if (canvasPages.length > 0) {
-      console.log("RENDERING ALL PAGES");
-      canvasPages.map((page) => {
-        // render only if not empty
-        // has children components
-        // if it has children
-        console.log("Main RENDER=", page);
-        if (page.content && page.content.length > 0) {
-          console.log("page has content");
-          domComponents.addComponent({
-            type: "custom-page",
-            components: page.content,
-            traits: [
-              {
-                label: "Index",
-                type: "number",
-                name: "index",
-                value: page.index,
-              },
-            ],
-          });
-          domComponents.addComponent({ type: "custom-divider" });
-          return;
-        }
-        // if empty page
-        domComponents.addComponent({
-          type: "custom-page",
-          traits: [
-            {
-              label: "Index",
-              type: "number",
-              name: "index",
-              value: page.index,
-            },
-          ],
-        });
-        domComponents.addComponent({ type: "custom-divider" });
-      });
-    }
+  //   // when we have pages
+  //   if (canvasPages.length > 0) {
+  //     console.log("RENDERING ALL PAGES");
+  //     canvasPages.map((page) => {
+  //       // render only if not empty, has children components
+  //       // if it has children
+  //       console.log("Main RENDER=", page);
+  //       if (page.content && page.content.length > 0) {
+  //         console.log("page has content");
+  //         domComponents.addComponent({
+  //           type: "custom-page",
+  //           components: page.content,
+  //           traits: [
+  //             {
+  //               label: "Index",
+  //               type: "number",
+  //               name: "index",
+  //               value: page.index,
+  //             },
+  //           ],
+  //         });
+  //         domComponents.addComponent({ type: "custom-divider" });
+  //         return;
+  //       }
+  //       // if empty page
+  //       domComponents.addComponent({
+  //         type: "custom-page",
+  //         traits: [
+  //           {
+  //             label: "Index",
+  //             type: "number",
+  //             name: "index",
+  //             value: page.index,
+  //           },
+  //         ],
+  //       });
+  //       domComponents.addComponent({ type: "custom-divider" });
+  //     });
+  //   }
 
-    // check for saved content
-    // const savedContent = JSON.parse(localStorage.getItem("MyCanvas"));
-    // console.log("getting savedContent:", savedContent);
-    // if (savedContent && savedContent.components.length > 0) {
-    //   editor.setComponents(savedContent.components);
-    // }
+  //   // check for saved content
+  //   // const savedContent = JSON.parse(localStorage.getItem("MyCanvas"));
+  //   // console.log("getting savedContent:", savedContent);
+  //   // if (savedContent && savedContent.components.length > 0) {
+  //   //   editor.setComponents(savedContent.components);
+  //   // }
 
-    // if (!savedContent || savedContent.components.length === 0) {
-    //   console.log(true);
-    //   domComponents.addComponent({ type: "custom-page" });
-    //   domComponents.addComponent({ type: "custom-divider" });
-    //   handleSave(editor);
-    // }
+  //   // if (!savedContent || savedContent.components.length === 0) {
+  //   //   console.log(true);
+  //   //   domComponents.addComponent({ type: "custom-page" });
+  //   //   domComponents.addComponent({ type: "custom-divider" });
+  //   //   handleSave(editor);
+  //   // }
 
-    // // check if editor instance exists
-    // // check if there are pages in the canvas
-    // if (editor && canvasPages.length > 0) {
-    //   // clear any components
-    //   // because we will render all ourselves
-    //   const domComponents = editor.DomComponents;
-    //   domComponents.clear();
-    //   // loop through all pages store in zustand store
-    //   canvasPages.forEach((page, index) => {
-    //     // for each page add custom-page component
-    //     // with all its children
-    //     console.log(page);
-    //     domComponents.addComponent({
-    //       type: "custom-page",
-    //       components: page.componentsList,
-    //     });
+  //   // // check if editor instance exists
+  //   // // check if there are pages in the canvas
+  //   // if (editor && canvasPages.length > 0) {
+  //   //   // clear any components
+  //   //   // because we will render all ourselves
+  //   //   const domComponents = editor.DomComponents;
+  //   //   domComponents.clear();
+  //   //   // loop through all pages store in zustand store
+  //   //   canvasPages.forEach((page, index) => {
+  //   //     // for each page add custom-page component
+  //   //     // with all its children
+  //   //     console.log(page);
+  //   //     domComponents.addComponent({
+  //   //       type: "custom-page",
+  //   //       components: page.componentsList,
+  //   //     });
 
-    //     // add custom divider after end of each page
-    //     domComponents.addComponent({ type: "custom-divider" });
-    //   });
-    // }
-    // if canvas is empty just who one custom divider
-    // else if (editor && canvasPages.length === 0) {
-    //   addCanvasPage({
-    //     id: canvasPages.length + 1,
-    //     componentsList: [],
-    //   });
-    //   const domComponents = editor.DomComponents;
-    //   domComponents.addComponent({ type: "custom-page" });
-    //   domComponents.addComponent({ type: "custom-divider" });
-    // }
-  }, [canvasPages, grapesjsEditor, addCanvasPage]);
+  //   //     // add custom divider after end of each page
+  //   //     domComponents.addComponent({ type: "custom-divider" });
+  //   //   });
+  //   // }
+  //   // if canvas is empty just who one custom divider
+  //   // else if (editor && canvasPages.length === 0) {
+  //   //   addCanvasPage({
+  //   //     id: canvasPages.length + 1,
+  //   //     componentsList: [],
+  //   //   });
+  //   //   const domComponents = editor.DomComponents;
+  //   //   domComponents.addComponent({ type: "custom-page" });
+  //   //   domComponents.addComponent({ type: "custom-divider" });
+  //   // }
+  // }, [canvasPages, grapesjsEditor, addCanvasPage]);
 
   // save fucntion
   const handleSave = (editor) => {

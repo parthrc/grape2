@@ -26,7 +26,10 @@ const SlashMenu = ({ handleMenuAction, query, handleMenuItemClick }) => {
     if (block.type === "rte") {
       handleMenuAction(block.label);
     }
+
+    console.log("Final after both clicks");
   };
+
   // filter blocks based on query
   const filteredBlocks = availableBlocks.filter((block) =>
     block.label.toLowerCase().includes(query.toLowerCase())
