@@ -4,27 +4,66 @@ import SlashMenu from "../SlashMenu/SlashMenu.jsx";
 import useGrapesjsEditorStore from "../../../store/GrapesjsEditorStore.jsx";
 import { sliceUntilSlash } from "../../../utils/random.js";
 
-const CustomTextBox = ({ editor, style, isBulletList }) => {
-  console.log("isBulletList flag inside custom-text-box", isBulletList);
+const CustomTextBox = ({ editor, style, isBulletList, content }) => {
+  // console.log("isBulletList flag inside custom-text-box", isBulletList);
   // State to manage slash menu visibility
   const [showMenu, setShowMenu] = useState(false);
   const [query, setQuery] = useState("");
   // state for content of tiptap editor
-  const [tiptapContent, setTiptapContent] = useState("hello");
+  const [tiptapContent, setTiptapContent] = useState("");
   // ref for slash menu
   const slashMenuRef = useRef(null);
 
-  // get saved content from traits
-  useEffect(() => {
-    if (editor) {
-      // get currently selected component
-      const comp = editor.getSelected();
-      // run only if currently selected component is custom-page
-      if (comp && comp.attributes.type === "custom-page") {
-        setTiptapContent(comp.getTrait("content").get("value"));
-      }
-    }
-  }, [editor]);
+  // useEffect(() => {
+  //   // get content from traits
+  //   console.log("Content from traits", content);
+  //   setTiptapContent(content);
+  //   const handleComponentDragStart = (component) => {
+  //     // Only run if the event is for a custom-text-box
+  //     if (component?.target?.attributes?.type === "custom-text-box") {
+  //       console.log("Drag start for:", component.target.attributes);
+
+  //       const contentTrait = component.target.getTrait("content");
+  //       console.log("Contenttrait dragSTART", contentTrait);
+  //       if (contentTrait) {
+  //         console.log("Saving content before drag:", tiptapContent);
+  //         contentTrait.setValue(content);
+  //       }
+  //     }
+  //   };
+
+  //   const handleComponentDragEnd = (component) => {
+  //     // Only run if the event is for a custom-text-box
+  //     if (component?.target?.attributes?.type === "custom-text-box") {
+  //       console.log("Drag end for:", component.target);
+
+  //       const contentTrait = component.target.getTrait("content").attributes;
+  //       console.log("Contenttrait dragEND");
+
+  //       if (contentTrait) {
+  //         const contentValue = contentTrait.value;
+  //         console.log("Content value END", contentValue);
+  //         if (contentValue) {
+  //           console.log("Restoring content after drag:", contentValue);
+  //           setTiptapContent(contentValue);
+  //         }
+  //       }
+  //     }
+  //   };
+
+  //   if (editor) {
+  //     console.log("Editor exists in ctb useEffect");
+  //     editor.on("component:drag:start", handleComponentDragStart);
+  //     editor.on("component:drag:end", handleComponentDragEnd);
+  //   }
+
+  //   return () => {
+  //     if (editor) {
+  //       editor.off("component:drag:start", handleComponentDragStart);
+  //       editor.off("component:drag:end", handleComponentDragEnd);
+  //     }
+  //   };
+  // }, [editor, tiptapContent, content]);
 
   // get tiptapEditor isntance from zustand
   const { tiptapEditor, grapesjsEditor } = useGrapesjsEditorStore();
@@ -40,19 +79,30 @@ const CustomTextBox = ({ editor, style, isBulletList }) => {
   }, []);
 
   const handleContentChange = (newContent) => {
-    console.log("handleCotentChange fired");
+    console.log("handleCotentChange fired", newContent);
     setTiptapContent(newContent);
-    // console.log("Editor isntance=", editor);
+
+    console.log("Editor isntance=", editor);
     if (editor) {
       const comp = editor.getSelected();
       if (comp) {
         // console.log("Comp==", comp);
-        const contentTrait = comp.getTrait("content");
-        if (contentTrait) {
-          contentTrait.set("value", newContent);
+        // Ensure the selected component is a `custom-text-box`
+        if (comp.attributes.type === "custom-text-box") {
+          console.log("Yes its a custom textbox");
+          const contentTrait = comp.getTrait("content");
+          if (contentTrait) {
+            console.log(
+              "Setting value on update",
+              newContent,
+              "contentTrait=",
+              contentTrait
+            );
+            contentTrait.setValue(newContent);
+          }
+        } else {
+          console.log("No component is selected in GrapesJS editor.");
         }
-      } else {
-        console.log("No component is selected in GrapesJS editor.");
       }
     }
   };
@@ -100,27 +150,27 @@ const CustomTextBox = ({ editor, style, isBulletList }) => {
   };
 
   // handle custom behaviour for bullet list
-  const handleEnterPress = useCallback(
-    (currentContent) => {
-      if (editor) {
-        const comp = editor.getSelected();
-        if (comp) {
-          const newComponent = editor.addComponents({
-            type: "custom-text-box",
-            content: "<ul>" + currentContent + "</ul>", // Pass the bullet list content
-            props: { isBulletList: true }, // Pass the flag
-          });
+  // const handleEnterPress = useCallback(
+  //   (currentContent) => {
+  //     if (editor) {
+  //       const comp = editor.getSelected();
+  //       if (comp) {
+  //         const newComponent = editor.addComponents({
+  //           type: "custom-text-box",
+  //           content: "<ul>" + currentContent + "</ul>", // Pass the bullet list content
+  //           props: { isBulletList: true }, // Pass the flag
+  //         });
 
-          const parent = comp.parent();
-          const index = parent.components().indexOf(comp);
-          parent.components().add(newComponent, { at: index + 1 });
+  //         const parent = comp.parent();
+  //         const index = parent.components().indexOf(comp);
+  //         parent.components().add(newComponent, { at: index + 1 });
 
-          editor.select(newComponent);
-        }
-      }
-    },
-    [editor]
-  );
+  //         editor.select(newComponent);
+  //       }
+  //     }
+  //   },
+  //   [editor]
+  // );
 
   const styles = {
     container: {
@@ -143,7 +193,7 @@ const CustomTextBox = ({ editor, style, isBulletList }) => {
         <Tiptap
           onToggleMenu={handleToggleMenu}
           onQueryChange={handleQueryChange}
-          content={tiptapContent}
+          ccontent={tiptapContent}
           onContentChange={handleContentChange}
           grapesjsEditor={grapesjsEditor}
           isBulletList={isBulletList}

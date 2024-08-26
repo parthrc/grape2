@@ -104,11 +104,16 @@ const ReactCoreGrapesjs = (editor) => {
     model: {
       ...coreReactModel,
       defaults: {
-        component: (props) => <CustomTextBox {...props} editor={editor} />, // Pass the editor as a prop,
+        component: (props) => {
+          // Access the trait values from the model's attributes
+          const content = props.content;
+
+          return <CustomTextBox {...props} editor={editor} content={content} />;
+        }, // Pass the editor as a prop,
         tagName: "div",
         // traits
         traits: [
-          { label: "Content", type: "text", name: "content", value: "hello" },
+          { label: "Content", type: "text", name: "content", value: "hey" },
         ],
 
         draggable: true,
@@ -118,6 +123,7 @@ const ReactCoreGrapesjs = (editor) => {
         props: {}, // Add this line to define custom props
       },
     },
+
     view: coreReactView,
   });
 

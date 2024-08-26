@@ -3,7 +3,6 @@ import StarterKit from "@tiptap/starter-kit";
 import Placeholder from "@tiptap/extension-placeholder";
 import useGrapesjsEditorStore from "../store/GrapesjsEditorStore.jsx";
 import { useEffect } from "react";
-import HardBreak from "@tiptap/extension-hard-break";
 import HardbreakExtended from "./plugins/HardbreakExtension.jsx";
 
 const Tiptap = ({
@@ -17,6 +16,9 @@ const Tiptap = ({
 }) => {
   // console.log("Editor inside the TIPTAP component,", grapesjsEditor);
   const { setTiptapEditor, isPreviewMode } = useGrapesjsEditorStore();
+  // Ensure that ccontent has a fallback value
+  const initialContent = content || "a";
+  console.log("Content inside the tiptap==", typeof ccontent);
   const tiptapEditor = useEditor({
     extensions: [
       StarterKit,
@@ -28,7 +30,8 @@ const Tiptap = ({
       //   placeholder: `start typing or use "/" for commands...`,
       // }),
     ],
-    // content: content,
+    content: initialContent,
+    // content: `askdljalkjdalkdj`,
 
     editorProps: {
       attributes: {
@@ -39,10 +42,10 @@ const Tiptap = ({
     autofocus: true,
     // add bullet list if flag is set
     onCreate({ editor }) {
-      console.log("Creating tiptap editor...");
-      console.log("isBulletList", isBulletList);
+      // console.log("Creating tiptap editor...");
+      // console.log("isBulletList", isBulletList);
       if (isBulletList) {
-        console.log("isBulkletList flag is TRUE");
+        // console.log("isBulkletList flag is TRUE");
         editor.chain().focus().toggleBulletList().run();
       }
     },
@@ -95,8 +98,12 @@ const Tiptap = ({
       setTiptapEditor(tiptapEditor);
       // set editable status of tiptap based on previewMode
       tiptapEditor.setEditable(!isPreviewMode);
+      // disbale slash menu if its open
+      if (isPreviewMode) {
+        onToggleMenu(false);
+      }
     }
-  }, [tiptapEditor, setTiptapEditor, isPreviewMode, content]);
+  }, [tiptapEditor, setTiptapEditor, isPreviewMode, content, onToggleMenu]);
 
   return (
     <div className="tiptap-container">
