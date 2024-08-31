@@ -52,6 +52,47 @@ function App() {
       console.log("Preview mode disabled!");
     });
 
+    editor.BlockManager.add("two-columns", {
+      label: "Two Columns",
+      content: `
+    <div class="two-columns" style="display: flex;">
+      <div class="column" style="flex: 1; padding: 40px; border: 1px solid #ccc;">Column 1 </div>
+      <div class="column" style="flex: 1; padding: 40px; border: 1px solid #ccc;">Column 2</div>
+    </div>
+  `,
+      category: "Layout",
+    });
+    editor.DomComponents.addType("two-columns", {
+      model: {
+        defaults: {
+          droppable: ".column",
+          attributes: { class: "two-columns" },
+        },
+      },
+    });
+    const maxColumns = 4;
+    // Listen to the event when a component is added
+    editor.on("component:mount", (component) => {
+      // Get the parent of the added component
+      const parent = component.parent();
+
+      // Check if the parent is a 'two-columns' component
+      if (
+        parent &&
+        parent.get("classes").some((cl) => cl.id === "two-columns")
+      ) {
+        // Count the number of columns in the parent
+        const columns = parent
+          .components()
+          .filter((comp) => comp.get("classes"));
+        // If the number of columns exceeds the maximum, remove the last added column
+        if (columns.length > maxColumns) {
+          // editor.getModel().get('UndoManager').undo();
+          component.remove();
+        }
+      }
+    });
+
     // on any canvas update, update localStorage
     // editor.on("update", () => {
     //   console.log("Canvas updated");
