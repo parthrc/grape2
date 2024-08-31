@@ -10,6 +10,10 @@ import CustomPageComponent from "./grapesjs/CustomTypes/CustomPageType/CustomPag
 import parserPostCSS from "grapesjs-parser-postcss";
 import CustomDividerComponenet from "./grapesjs/CustomTypes/CustomDividerType/CustomDivider.jsx";
 import { Template } from "./grapesjs/React Templates/Templates.jsx";
+import CustomColumn from "./grapesjs/CustomTypes/CustomColumnType/CustomColumn.jsx";
+import CustomLayout from "./grapesjs/CustomTypes/CustomnLayoutType/CustomLayout.jsx";
+import TestComp from "./grapesjs/CustomTypes/Test/TestComp.jsx";
+import CustomColumns from "./grapesjs/CustomTypes/Columns/CustomColumns.jsx";
 
 function App() {
   const {
@@ -353,6 +357,10 @@ function App() {
         plugins={[
           GrapesjsTailwindPlugin,
           CustomPageComponent,
+          CustomColumn,
+          CustomLayout,
+          TestComp,
+          CustomColumns,
           parserPostCSS,
           {
             id: "gjs-blocks-basic",

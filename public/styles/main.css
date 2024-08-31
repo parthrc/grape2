@@ -16,3 +16,21 @@
 .customTiptapInput:focus {
   outline: none;
 }
+
+.custom-column {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.custom-column > * {
+  box-sizing: border-box;
+}
+
+.custom-layout {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.custom-layout > * {
+  box-sizing: border-box;
+}
