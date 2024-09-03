@@ -106,9 +106,9 @@ const Tiptap = ({
   }, [tiptapEditor, setTiptapEditor, isPreviewMode, content, onToggleMenu]);
 
   return (
-    <div className="tiptap-container">
-      <EditorContent editor={tiptapEditor} />
-    </div>
+    // <div className="tiptap-container">
+    <EditorContent editor={tiptapEditor} />
+    // </div>
   );
 };
 

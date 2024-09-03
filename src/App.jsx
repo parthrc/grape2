@@ -14,6 +14,9 @@ import CustomColumn from "./grapesjs/CustomTypes/CustomColumnType/CustomColumn.j
 import CustomLayout from "./grapesjs/CustomTypes/CustomnLayoutType/CustomLayout.jsx";
 import TestComp from "./grapesjs/CustomTypes/Test/TestComp.jsx";
 import CustomColumns from "./grapesjs/CustomTypes/Columns/CustomColumns.jsx";
+import CustomRow from "./grapesjs/CustomTypes/CustomRowType/CustomRow.jsx";
+import Bootstrap from "./grapesjs/CustomTypes/Bootstrap/Bootstrap.jsx";
+import BaseReactCore from "./grapesjs/core/core2.jsx";
 
 function App() {
   const {
@@ -56,8 +59,8 @@ function App() {
       label: "Two Columns",
       content: `
     <div class="two-columns" style="display: flex;">
-      <div class="column" style="flex: 1; padding: 40px; border: 1px solid #ccc;">Column 1 </div>
-      <div class="column" style="flex: 1; padding: 40px; border: 1px solid #ccc;">Column 2</div>
+      <div class="column" style="flex: 1; padding: 40px; border: 1px solid #ccc;">Column 3 </div>
+     
     </div>
   `,
       category: "Layout",
@@ -65,8 +68,9 @@ function App() {
     editor.DomComponents.addType("two-columns", {
       model: {
         defaults: {
-          droppable: ".column",
+          droppable: true,
           attributes: { class: "two-columns" },
+          // components: [],
         },
       },
     });
@@ -79,12 +83,14 @@ function App() {
       // Check if the parent is a 'two-columns' component
       if (
         parent &&
-        parent.get("classes").some((cl) => cl.id === "two-columns")
+        parent.get("classes").some((cl) => cl.id === "custom-text-box")
       ) {
         // Count the number of columns in the parent
         const columns = parent
           .components()
           .filter((comp) => comp.get("classes"));
+        console.log("Inside if", parent, component);
+        console.log("columns=", columns);
         // If the number of columns exceeds the maximum, remove the last added column
         if (columns.length > maxColumns) {
           // editor.getModel().get('UndoManager').undo();
@@ -403,12 +409,15 @@ function App() {
           TestComp,
           CustomColumns,
           parserPostCSS,
+          CustomRow,
+          Bootstrap,
           {
             id: "gjs-blocks-basic",
             src: "https://unpkg.com/grapesjs-blocks-basic",
           },
 
           ReactCoreGrapesjs,
+          // BaseReactCore,
         ]}
         onEditor={onEditor}
         options={{

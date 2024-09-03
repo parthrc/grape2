@@ -177,28 +177,26 @@ const CustomTextBox = ({ editor, style, isBulletList, content }) => {
       border: "1px solid black",
       backgroundColor: "white",
       transition: "background-color 0.3s",
-      paddingInline: "10px",
+      padding: "50px",
       position: "relative",
     },
 
     innerBox: {
       margin: "1px",
+      padding: "50px",
     },
   };
 
   return (
-    <div className="bg-blue-50">
-      <div style={styles.innerBox}>
-        {/* <FixedMenu onAction={(action) => handleMenuAction(action)} /> */}
-        <Tiptap
-          onToggleMenu={handleToggleMenu}
-          onQueryChange={handleQueryChange}
-          ccontent={tiptapContent}
-          onContentChange={handleContentChange}
-          grapesjsEditor={grapesjsEditor}
-          isBulletList={isBulletList}
-        />
-      </div>
+    <div style={styles.innerBox}>
+      <Tiptap
+        onToggleMenu={handleToggleMenu}
+        onQueryChange={handleQueryChange}
+        ccontent={tiptapContent}
+        onContentChange={handleContentChange}
+        grapesjsEditor={grapesjsEditor}
+        isBulletList={isBulletList}
+      />
       {showMenu && (
         <div ref={slashMenuRef}>
           <SlashMenu
