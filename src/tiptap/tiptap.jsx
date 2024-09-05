@@ -17,7 +17,7 @@ const Tiptap = ({
   // console.log("Editor inside the TIPTAP component,", grapesjsEditor);
   const { setTiptapEditor, isPreviewMode } = useGrapesjsEditorStore();
   // Ensure that ccontent has a fallback value
-  const initialContent = content || "a";
+  const initialContent = content || "";
   // console.log("Content inside the tiptap==", typeof ccontent);
   const tiptapEditor = useEditor({
     extensions: [
@@ -30,7 +30,7 @@ const Tiptap = ({
       //   placeholder: `start typing or use "/" for commands...`,
       // }),
     ],
-    content: initialContent,
+    content: content,
     // content: `askdljalkjdalkdj`,
 
     editorProps: {
@@ -42,7 +42,7 @@ const Tiptap = ({
     autofocus: true,
     // add bullet list if flag is set
     onCreate({ editor }) {
-      // console.log("Creating tiptap editor...");
+      console.log("Tiptap on create=", content);
       // console.log("isBulletList", isBulletList);
       if (isBulletList) {
         // console.log("isBulkletList flag is TRUE");

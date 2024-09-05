@@ -113,6 +113,8 @@ function App() {
       console.log("model=", model.attributes.type);
       console.log("Parent=", parent);
       console.log("Parent name=", parent.attributes.type);
+      // we are handling update event for markdown internally
+      // so jsut return if it catches here
       if (model.attributes.type === "custom-text-box") return;
       // if a new component is added to the main canvas
       // wrap it inside custom-row component first

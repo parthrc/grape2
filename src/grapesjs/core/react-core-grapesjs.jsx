@@ -12,7 +12,6 @@ const ReactCoreGrapesjs = (editor) => {
   const renderWait = 100;
 
   const coreReactModel = {
-
     toHTML(opts = {}) {
       const attributes = this.getAttrToHTML();
       const classes = attributes.class;
@@ -118,7 +117,7 @@ const ReactCoreGrapesjs = (editor) => {
         ],
 
         draggable: true,
-        droppable: true,
+        // droppable: true,
         editable: false,
         attributes: { class: "custom-text-box" },
         props: {}, // Add this line to define custom props
