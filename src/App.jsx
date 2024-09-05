@@ -10,13 +10,14 @@ import CustomPageComponent from "./grapesjs/CustomTypes/CustomPageType/CustomPag
 import parserPostCSS from "grapesjs-parser-postcss";
 import CustomDividerComponenet from "./grapesjs/CustomTypes/CustomDividerType/CustomDivider.jsx";
 import { Template } from "./grapesjs/React Templates/Templates.jsx";
-import CustomColumn from "./grapesjs/CustomTypes/CustomColumnType/CustomColumn.jsx";
+import CustomColumn from "./LayoutComponents/CustomColumn.jsx";
 import CustomLayout from "./grapesjs/CustomTypes/CustomnLayoutType/CustomLayout.jsx";
 import TestComp from "./grapesjs/CustomTypes/Test/TestComp.jsx";
 import CustomColumns from "./grapesjs/CustomTypes/Columns/CustomColumns.jsx";
-import CustomRow from "./grapesjs/CustomTypes/CustomRowType/CustomRow.jsx";
+import CustomRow from "./LayoutComponents/CustomRow.jsx";
 import Bootstrap from "./grapesjs/CustomTypes/Bootstrap/Bootstrap.jsx";
 import BaseReactCore from "./grapesjs/core/core2.jsx";
+import { getPositionOfChild } from "./utils/grapesjs-utils.js";
 
 function App() {
   const {
@@ -42,6 +43,7 @@ function App() {
     if (editor) setGrapesjsEditor(editor);
 
     editor.addComponents({ type: "custom-text-box" });
+    editor.addComponents({ type: "custom-row" });
 
     // commands
     // when previwe mode is true
@@ -98,6 +100,50 @@ function App() {
         }
       }
     });
+    // custom row creation
+    const reloadIframe = (editor) => {
+      const iframe = editor.Canvas.getFrameEl();
+      if (iframe) {
+        iframe.contentWindow.location.reload();
+      }
+    };
+
+    const handleComponentAdd = (model) => {
+      const parent = model.parent();
+      console.log("Parent=", parent);
+
+      // if a new component is added to the main canvas
+      // wrap it inside custom-row component first
+      if (parent.attributes.type === "wrapper") {
+        console.log("New component added = ", model);
+
+        // Temporarily remove the event listener
+        editor.off("component:add", handleComponentAdd);
+
+        const position = getPositionOfChild(model);
+        const latestAddedComp = parent.getChildAt(position);
+        console.log("Latest Added = ", latestAddedComp);
+        console.log("Before replacing", parent.components().models);
+
+        // Replace the latest added component with a new one
+        latestAddedComp.replaceWith(
+          {
+            type: "custom-row",
+            components: [
+              { type: "custom-column", components: [latestAddedComp.clone()] },
+            ],
+          },
+          { at: position }
+        );
+        console.log("After replacing", parent.components().models);
+        // Add the event listener back
+        editor.on("component:add", handleComponentAdd);
+        // force reload iframe
+        reloadIframe(editor);
+      }
+    };
+
+    editor.on("component:add", handleComponentAdd);
 
     // on any canvas update, update localStorage
     // editor.on("update", () => {

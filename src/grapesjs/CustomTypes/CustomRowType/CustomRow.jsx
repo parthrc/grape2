@@ -1,7 +1,7 @@
 const CustomRow = (editor) => {
   editor.DomComponents.addType("custom-row", {
     isComponent: (el) =>
-      el.tagName === "DIV" && el.classList.contains("csutom-row"),
+      el.tagName === "DIV" && el.classList.contains("custom-row"),
     model: {
       defaults: {
         tagName: "div",
@@ -42,7 +42,7 @@ const CustomRow = (editor) => {
       init() {
         console.log("Init for custom row");
         this.handleDragEvent = this.handleDragEvent.bind(this);
-        this.listenTo(this, "component:drag:start", this.handleDragEvent);
+        this.listenTo(this.em, "component:drag", this.handleDragEvent);
       },
 
       handleDragEvent(dragEvent) {

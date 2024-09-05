@@ -12,6 +12,7 @@ const ReactCoreGrapesjs = (editor) => {
   const renderWait = 100;
 
   const coreReactModel = {
+
     toHTML(opts = {}) {
       const attributes = this.getAttrToHTML();
       const classes = attributes.class;
