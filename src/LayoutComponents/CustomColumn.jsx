@@ -21,7 +21,7 @@ const CustomColumn = (editor) => {
         style: {
           width: "100%",
           padding: "10px",
-          "background-color": "#facfcf",
+          "background-color": "#ffffff",
           color: "#000000",
           border: "1px solid #a80404",
           "border-radius": "5px",

@@ -89,15 +89,15 @@ const CustomTextBox = ({ editor, style, isBulletList, content }) => {
         // console.log("Comp==", comp);
         // Ensure the selected component is a `custom-text-box`
         if (comp.attributes.type === "custom-text-box") {
-          console.log("Yes its a custom textbox");
+          // console.log("Yes its a custom textbox");
           const contentTrait = comp.getTrait("content");
           if (contentTrait) {
-            console.log(
-              "Setting value on update",
-              newContent,
-              "contentTrait=",
-              contentTrait
-            );
+            // console.log(
+            //   "Setting value on update",
+            //   newContent,
+            //   "contentTrait=",
+            //   contentTrait
+            // );
             contentTrait.setValue(newContent);
           }
         } else {
@@ -139,7 +139,7 @@ const CustomTextBox = ({ editor, style, isBulletList, content }) => {
         console.log("default case");
         break;
     }
-
+    console.log("Running focus command");
     tiptapEditor.commands.focus("end");
   };
   // clear editor text after slash menu click

@@ -18,7 +18,7 @@ const Tiptap = ({
   const { setTiptapEditor, isPreviewMode } = useGrapesjsEditorStore();
   // Ensure that ccontent has a fallback value
   const initialContent = content || "a";
-  console.log("Content inside the tiptap==", typeof ccontent);
+  // console.log("Content inside the tiptap==", typeof ccontent);
   const tiptapEditor = useEditor({
     extensions: [
       StarterKit,
@@ -69,7 +69,7 @@ const Tiptap = ({
         onQueryChange("");
         onToggleMenu(false);
       }
-      console.log("tiptap updated: ", text);
+      // console.log("tiptap updated: ", text);
 
       // Pass the updated content back to the parent component
       onContentChange(editor.getHTML());
@@ -93,7 +93,7 @@ const Tiptap = ({
 
   // set tiptapEditor isnatnce to zustand
   useEffect(() => {
-    console.log("Content inside tiptap=", content);
+    // console.log("Content inside tiptap=", content);
     if (tiptapEditor) {
       setTiptapEditor(tiptapEditor);
       // set editable status of tiptap based on previewMode

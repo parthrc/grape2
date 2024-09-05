@@ -1,6 +1,8 @@
 const addComponentNextToSelected = (editor, newComponent) => {
   const selected = editor.getSelected();
   console.log("inside addComponentNextToSelected=", selected);
+  console.log("inside selected=", selected.attributes.type);
+  console.log("inside parent=", selected.parent().attributes.type);
   if (selected) {
     const parent = selected.parent();
     console.log("parent=", parent.components());

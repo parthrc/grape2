@@ -42,7 +42,7 @@ function App() {
     // set editor isntance to zustand store
     if (editor) setGrapesjsEditor(editor);
 
-    editor.addComponents({ type: "custom-text-box" });
+    // editor.addComponents({ type: "custom-text-box" });
     editor.addComponents({ type: "custom-row" });
 
     // commands
@@ -78,28 +78,28 @@ function App() {
     });
     const maxColumns = 4;
     // Listen to the event when a component is added
-    editor.on("component:mount", (component) => {
-      // Get the parent of the added component
-      const parent = component.parent();
+    // editor.on("component:mount", (component) => {
+    //   // Get the parent of the added component
+    //   const parent = component.parent();
 
-      // Check if the parent is a 'two-columns' component
-      if (
-        parent &&
-        parent.get("classes").some((cl) => cl.id === "custom-text-box")
-      ) {
-        // Count the number of columns in the parent
-        const columns = parent
-          .components()
-          .filter((comp) => comp.get("classes"));
-        console.log("Inside if", parent, component);
-        console.log("columns=", columns);
-        // If the number of columns exceeds the maximum, remove the last added column
-        if (columns.length > maxColumns) {
-          // editor.getModel().get('UndoManager').undo();
-          component.remove();
-        }
-      }
-    });
+    //   // Check if the parent is a 'two-columns' component
+    //   if (
+    //     parent &&
+    //     parent.get("classes").some((cl) => cl.id === "two-column")
+    //   ) {
+    //     // Count the number of columns in the parent
+    //     const columns = parent
+    //       .components()
+    //       .filter((comp) => comp.get("classes"));
+    //     console.log("Inside if", parent, component);
+    //     console.log("columns=", columns);
+    //     // If the number of columns exceeds the maximum, remove the last added column
+    //     if (columns.length > maxColumns) {
+    //       // editor.getModel().get('UndoManager').undo();
+    //       component.remove();
+    //     }
+    //   }
+    // });
     // custom row creation
     const reloadIframe = (editor) => {
       const iframe = editor.Canvas.getFrameEl();
@@ -110,8 +110,10 @@ function App() {
 
     const handleComponentAdd = (model) => {
       const parent = model.parent();
+      console.log("model=", model.attributes.type);
       console.log("Parent=", parent);
-
+      console.log("Parent name=", parent.attributes.type);
+      if (model.attributes.type === "custom-text-box") return;
       // if a new component is added to the main canvas
       // wrap it inside custom-row component first
       if (parent.attributes.type === "wrapper") {
