@@ -16,7 +16,7 @@
     "@tiptap/extension-hard-break": "^2.5.6",
     "@tiptap/extension-placeholder": "^2.5.6",
     "@tiptap/pm": "^2.5.6",
-    "@tiptap/react": "^2.5.6",
+    "@tiptap/react": "^2.6.6",
     "@tiptap/starter-kit": "^2.5.6",
     "grapesjs": "^0.21.12",
     "grapesjs-parser-postcss": "^1.0.3",

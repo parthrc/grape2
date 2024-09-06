@@ -25,11 +25,15 @@ const Tiptap = ({
       HardbreakExtended.configure({
         grapesjsEditor: grapesjsEditor,
       }),
+
       // CustomEnterExtension,
       // Placeholder.configure({
       //   placeholder: `start typing or use "/" for commands...`,
       // }),
     ],
+    // This option gives us the control to disable the default behavior of re-rendering the editor on every transaction.
+    shouldRerenderOnTransaction: false,
+
     content: content,
     // content: `askdljalkjdalkdj`,
 
@@ -40,6 +44,10 @@ const Tiptap = ({
     },
 
     autofocus: true,
+    // on focus
+    onFocus({ editor }) {
+      console.log("Tip tap focused is editor destroyed", editor.isDestroyed);
+    },
     // add bullet list if flag is set
     onCreate({ editor }) {
       console.log("Tiptap on create=", content);
@@ -106,9 +114,9 @@ const Tiptap = ({
   }, [tiptapEditor, setTiptapEditor, isPreviewMode, content, onToggleMenu]);
 
   return (
-    // <div className="tiptap-container">
-    <EditorContent editor={tiptapEditor} />
-    // </div>
+    <div className="tiptap-container">
+      <EditorContent editor={tiptapEditor} />
+    </div>
   );
 };
 

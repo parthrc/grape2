@@ -17,7 +17,7 @@ import CustomColumns from "./grapesjs/CustomTypes/Columns/CustomColumns.jsx";
 import CustomRow from "./LayoutComponents/CustomRow.jsx";
 import Bootstrap from "./grapesjs/CustomTypes/Bootstrap/Bootstrap.jsx";
 import BaseReactCore from "./grapesjs/core/core2.jsx";
-import { getPositionOfChild } from "./utils/grapesjs-utils.js";
+import { getPositionOfChild, reloadIframe } from "./utils/grapesjs-utils.js";
 
 function App() {
   const {
@@ -78,35 +78,37 @@ function App() {
     });
     const maxColumns = 4;
     // Listen to the event when a component is added
-    // editor.on("component:mount", (component) => {
-    //   // Get the parent of the added component
-    //   const parent = component.parent();
+    editor.on("component:mount", (component) => {
+      // Get the parent of the added component
+      const parent = component.parent();
 
-    //   // Check if the parent is a 'two-columns' component
-    //   if (
-    //     parent &&
-    //     parent.get("classes").some((cl) => cl.id === "two-column")
-    //   ) {
-    //     // Count the number of columns in the parent
-    //     const columns = parent
-    //       .components()
-    //       .filter((comp) => comp.get("classes"));
-    //     console.log("Inside if", parent, component);
-    //     console.log("columns=", columns);
-    //     // If the number of columns exceeds the maximum, remove the last added column
-    //     if (columns.length > maxColumns) {
-    //       // editor.getModel().get('UndoManager').undo();
-    //       component.remove();
-    //     }
-    //   }
-    // });
-    // custom row creation
-    const reloadIframe = (editor) => {
-      const iframe = editor.Canvas.getFrameEl();
-      if (iframe) {
-        iframe.contentWindow.location.reload();
+      // Check if the parent is a 'two-columns' component
+      if (
+        parent &&
+        parent.get("classes").some((cl) => cl.id === "custom-row")
+      ) {
+        // Count the number of columns in the parent
+
+        const columns = parent
+          .components()
+          .filter((comp) => comp.get("classes"));
+        // const columns = component.components();
+        const columnCount = columns.length;
+
+        console.log("Inside if", parent, component);
+        console.log("columns=", columns);
+        // If the number of columns exceeds the maximum, remove the last added column
+        console.log("Max length", columns.length);
+
+        if (columns.length > maxColumns) {
+          console.log("Max length", columns.length);
+          // editor.getModel().get("UndoManager").undo();
+          editor.select(component);
+          component.remove();
+        }
       }
-    };
+    });
+    // custom row creation
 
     const handleComponentAdd = (model) => {
       const parent = model.parent();
@@ -126,6 +128,7 @@ function App() {
 
         const position = getPositionOfChild(model);
         const latestAddedComp = parent.getChildAt(position);
+        console.log("Position added at", position);
         console.log("Latest Added = ", latestAddedComp);
         console.log("Before replacing", parent.components().models);
 
@@ -147,7 +150,7 @@ function App() {
       }
     };
 
-    editor.on("component:add", handleComponentAdd);
+    // editor.on("component:add", handleComponentAdd);
 
     // on any canvas update, update localStorage
     // editor.on("update", () => {

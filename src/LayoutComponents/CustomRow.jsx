@@ -1,3 +1,5 @@
+import { reloadIframe } from "../utils/grapesjs-utils.js";
+
 const CustomRow = (editor) => {
   editor.Components.addType("custom-row", {
     isComponent: (el) =>
@@ -27,50 +29,22 @@ const CustomRow = (editor) => {
       },
 
       init() {
-        // this.on("component:update", this.adjustColumnWidths);
-        // // Listen to the component:add event to handle new components
-        // this.listenTo(this.components(), "add", this.adjustColumnWidths);
+        // Listen to the component:add event to handle new components
+        this.listenTo(this.components(), "add", this.adjustColumnWidths);
       },
 
-      adjustColumnWidths() {
+      adjustColumnWidths(model) {
         const columns = this.components();
         const columnCount = columns.length;
-        console.log("adjustColumnWidths", columnCount);
-        console.log("Total columns", columns);
 
-        // Limit to a maximum of 4 columns
-        if (columnCount > 4) {
-          console.log("Inside columns are more than 4");
-          // Remove columns added after the 4th
-          for (let i = columnCount - 1; i >= 4; i--) {
-            console.log("Column at ", i, " is ", columns.at(i));
-            columns.at(i).remove();
-          }
-        }
-
-        // Wrap any new components in columns
+        // set widths based on number of columns by updating the style trait
         columns.each((column, index) => {
-          console.log("Each column=", column);
-          console.log("Each column=", column.attributes.type);
           const currentStyle = column.getStyle();
           if (index < 4) {
             column.setStyle({
               ...currentStyle,
               width: `${100 / Math.min(columnCount, 4)}%`,
             });
-
-            // Ensure that any direct children are wrapped in a custom-column
-            // const childComponents = column.components();
-            // childComponents.each((child) => {
-            //   //   console.log("Child type=", child.get("type"));
-            //   if (child.get("type") !== "custom-column") {
-            //     column.append({
-            //       type: "custom-column",
-            //       components: [child.clone()],
-            //     });
-            //     child.remove();
-            //   }
-            // });
           }
         });
       },

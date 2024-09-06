@@ -18,7 +18,9 @@ const CustomTextBox = ({ editor, style, isBulletList, content }) => {
   const { tiptapEditor, grapesjsEditor } = useGrapesjsEditorStore();
 
   // useEffect
-  useEffect(() => {}, []);
+  useEffect(() => {
+    console.log("Custom box RAN");
+  }, []);
 
   // handle toggle of slashmenu
   const handleToggleMenu = useCallback((show) => {
@@ -111,13 +113,14 @@ const CustomTextBox = ({ editor, style, isBulletList, content }) => {
       border: "1px solid black",
       backgroundColor: "white",
       transition: "background-color 0.3s",
-      padding: "50px",
+      padding: "5px",
       position: "relative",
     },
 
     innerBox: {
       margin: "1px",
-      padding: "50px",
+      padding: "5px",
+      backgroundColor: "#dadada",
     },
   };
 

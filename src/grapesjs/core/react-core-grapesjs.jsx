@@ -101,6 +101,8 @@ const ReactCoreGrapesjs = (editor) => {
 
   // Add custom text box type
   domc.addType("custom-text-box", {
+    isComponent: (el) =>
+      el.tagName === "DIV" && el.classList.contains("custom-text-box"),
     model: {
       ...coreReactModel,
       defaults: {

@@ -12,4 +12,12 @@ const getPositionOfChild = (component) => {
   return index;
 };
 
-export { getPositionOfChild };
+// reload the iframe
+const reloadIframe = (editor) => {
+  const iframe = editor.Canvas.getFrameEl();
+  if (iframe) {
+    iframe.contentWindow.location.reload();
+  }
+};
+
+export { getPositionOfChild, reloadIframe };
