@@ -20,7 +20,9 @@ const CustomTextBox = ({ editor, style, isBulletList, content }) => {
   // useEffect
   useEffect(() => {
     console.log("Custom box RAN");
-  }, []);
+    console.log("Starting Content=", content);
+    setTiptapContent(content);
+  }, [content]);
 
   // handle toggle of slashmenu
   const handleToggleMenu = useCallback((show) => {

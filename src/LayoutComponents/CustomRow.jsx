@@ -52,7 +52,7 @@ const CustomRow = (editor) => {
 
     view: {
       onRender() {
-        console.log("CustomRow rendered");
+        // console.log("CustomRow rendered");
       },
     },
   });

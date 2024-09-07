@@ -35,7 +35,7 @@ const CustomColumn = (editor) => {
     // View definition (optional)
     view: {
       onRender() {
-        console.log("CustomColumn rendered");
+        // console.log("CustomColumn rendered");
       },
     },
   });

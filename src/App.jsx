@@ -76,12 +76,11 @@ function App() {
         },
       },
     });
-    const maxColumns = 4;
-    // Listen to the event when a component is added
-    editor.on("component:mount", (component) => {
-      // Get the parent of the added component
-      const parent = component.parent();
 
+    const handleMount = (model) => {
+      // Get the parent of the added component
+      const parent = model.parent();
+      // console.log("Inside mount, Parent =", parent);
       // Check if the parent is a 'two-columns' component
       if (
         parent &&
@@ -95,25 +94,55 @@ function App() {
         // const columns = component.components();
         const columnCount = columns.length;
 
-        console.log("Inside if", parent, component);
-        console.log("columns=", columns);
+        // console.log("Inside if", parent, model);
+        // console.log("columns=", columns);
         // If the number of columns exceeds the maximum, remove the last added column
-        console.log("Max length", columns.length);
+        // console.log("Max length", columns.length);
 
         if (columns.length > maxColumns) {
-          console.log("Max length", columns.length);
+          // console.log("Max length", columns.length);
           // editor.getModel().get("UndoManager").undo();
-          editor.select(component);
-          component.remove();
+          editor.select(model);
+          model.remove();
         }
       }
-    });
+
+      // if (parent && parent.attributes.type === "wrapper") {
+      //   console.log("Inside wrapper as a parent");
+
+      //   // Temporarily remove the event listener
+      //   // editor.off("component:add", handleComponentAdd);
+
+      //   const position = getPositionOfChild(model);
+      //   const latestAddedComp = parent.getChildAt(position);
+      //   console.log("Position added at", position);
+      //   console.log("Latest Added = ", latestAddedComp);
+      //   console.log("Before replacing", parent.components().models);
+
+      //   // Replace the latest added component with a new one
+      //   latestAddedComp.replaceWith(
+      //     {
+      //       type: "custom-row",
+      //       components: [
+      //         { type: "custom-column", components: [latestAddedComp.clone()] },
+      //       ],
+      //     },
+      //     { at: position }
+      //   );
+      //   console.log("After replacing", parent.components().models);
+      //   // Add the event listener back
+      //   editor.on("component:add");
+      // }
+    };
+    const maxColumns = 4;
+    // Listen to the event when a component is added
+    editor.on("component:mount", handleMount);
     // custom row creation
 
     const handleComponentAdd = (model) => {
       const parent = model.parent();
-      console.log("model=", model.attributes.type);
-      console.log("Parent=", parent);
+      console.log("Model name=", model.attributes.type);
+      console.log("Parent Object=", parent);
       console.log("Parent name=", parent.attributes.type);
       // we are handling update event for markdown internally
       // so jsut return if it catches here
@@ -146,7 +175,7 @@ function App() {
         // Add the event listener back
         editor.on("component:add", handleComponentAdd);
         // force reload iframe
-        reloadIframe(editor);
+        // reloadIframe(editor);
       }
     };
 

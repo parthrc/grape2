@@ -17,7 +17,7 @@ const Tiptap = ({
   // console.log("Editor inside the TIPTAP component,", grapesjsEditor);
   const { setTiptapEditor, isPreviewMode } = useGrapesjsEditorStore();
   // Ensure that ccontent has a fallback value
-  const initialContent = content || "";
+
   // console.log("Content inside the tiptap==", typeof ccontent);
   const tiptapEditor = useEditor({
     extensions: [
@@ -34,7 +34,7 @@ const Tiptap = ({
     // This option gives us the control to disable the default behavior of re-rendering the editor on every transaction.
     shouldRerenderOnTransaction: false,
 
-    content: content,
+    content: content, // Ensure content has a fallback
     // content: `askdljalkjdalkdj`,
 
     editorProps: {
@@ -85,28 +85,36 @@ const Tiptap = ({
 
     // Adding custom keyboard shortcuts using addKeyboardShortcuts
     addKeyboardShortcuts() {
-      console.log("addKeyboardShortcuts called");
       return {
         Enter: ({ editor }) => {
-          console.log("ENter key pressed");
+          // Check if the editor is active in bullet list mode
           if (editor.isActive("bulletList")) {
-            onEnterPress(editor.getHTML()); // Call the handler passed as a prop
+            // Handle Enter key differently for bullet lists
+            editor.commands.insertContent("<li>New item</li>"); // Example for adding a new item
             return true; // Prevent default behavior
           }
+
+          // Handle Enter key in other contexts if needed
           return false;
         },
+        // Define other shortcuts if necessary
       };
     },
   });
 
   // set tiptapEditor isnatnce to zustand
   useEffect(() => {
-    // console.log("Content inside tiptap=", content);
+    if (tiptapEditor && content) {
+      if (tiptapEditor.isActive("bulletList")) {
+        tiptapEditor.commands.setContent(content); // Set content if in bullet list format
+      } else {
+        tiptapEditor.commands.setContent(content); // Default setContent
+      }
+    }
+
     if (tiptapEditor) {
       setTiptapEditor(tiptapEditor);
-      // set editable status of tiptap based on previewMode
       tiptapEditor.setEditable(!isPreviewMode);
-      // disbale slash menu if its open
       if (isPreviewMode) {
         onToggleMenu(false);
       }
