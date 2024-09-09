@@ -157,28 +157,30 @@ const ReactCoreGrapesjs = (editor) => {
     model: {
       ...coreReactModel,
       defaults: {
-        component: (props) => {
-          // Extract content from attributes
-          const content = props?.attributes?.content;
-
-          return <CustomTextBox {...props} editor={editor} content={content} />;
-        },
         tagName: "div",
         traits: [
           {
             label: "Content",
             type: "text",
             name: "content",
-            changeProp: 1, // Ensure that changes to this trait are passed as props
+            value: "",
+            // changeProp: 1, // Ensure that changes to this trait are passed as props
           },
         ],
-        content: "",
+        // content: "",
         draggable: true,
         editable: true,
         attributes: { class: "custom-text-box" },
-        props() {
-          // Define additional props dynamically
-          return { content: this.get("content") };
+        // props() {
+        //   // try to dynamically dfine props
+        //   return { content: this.get("content") };
+        // },
+        component: (props) => {
+          // get content from attributes
+          const content = props.content;
+          // console.log("props=", props.content);
+          // console.log("Props in react", content);
+          return <CustomTextBox {...props} editor={editor} content={content} />;
         },
       },
       init() {
@@ -186,7 +188,6 @@ const ReactCoreGrapesjs = (editor) => {
       },
       handleContentChange() {
         const newContent = this.get("content");
-        // this.trigger("rerender");
         console.log("Content changed to:", newContent);
       },
     },
