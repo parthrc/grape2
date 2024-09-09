@@ -3,60 +3,60 @@ import useGrapesjsEditorStore from "../../../store/GrapesjsEditorStore.jsx";
 import addComponentNextToSelected from "../../../utils/grapesjs.js";
 
 const SlashMenu = ({ handleMenuAction, query, handleMenuItemClick }) => {
-  // get all blocks
+  // Get all blocks from the GrapesJS store
   const { availableBlocks, grapesjsEditor } = useGrapesjsEditorStore();
 
-  //ahndler
+  // Handler for click on slash menu item
   const handleOnClickSlashMenuItem = (block) => {
-    // addComponentNextToSelected(grapesjsEditor);
-    // check type of clicked item and proceed accordingly
-
-    // if custom component
-    if (block.category === "custom-component") {
-      // Create a JSX component from the component ID
+    console.log("Block=", block);
+    if (block.category === "Custom component") {
+      // If it's a custom component, create a JSX component and add it next to the selected one
       const jsxComponent = React.createElement(block.component_id);
-      // add new component next to the currently clicked element
       addComponentNextToSelected(grapesjsEditor, jsxComponent);
-      // grapesjsEditor.addComponents(jsxComponent);
-
       handleMenuItemClick();
     }
 
-    // if tiptap menu item
     if (block.type === "rte") {
-      handleMenuAction(block.label);
+      // If it's a Tiptap item, execute the related action
+      handleMenuAction(block.name);
     }
-
-    console.log("Final after both clicks");
   };
 
-  // filter blocks based on query
+  // Filter blocks based on query input
   const filteredBlocks = availableBlocks.filter((block) =>
     block.label.toLowerCase().includes(query.toLowerCase())
   );
 
-  // console.log("avialable block", availableBlocks);
+  // Group the filtered blocks by category
+  const groupedBlocks = filteredBlocks.reduce((acc, item) => {
+    if (!acc[item.category]) {
+      acc[item.category] = [];
+    }
+    acc[item.category].push(item);
+    return acc;
+  }, {});
+
   return (
-    <div
-      style={{
-        border: "1px solid black",
-        position: "absolute",
-        background: "white",
-        zIndex: "99999",
-      }}
-    >
-      {filteredBlocks.map((block, index) => {
-        // console.log("block=", block.label);
-        return (
-          <div
-            key={index}
-            style={{ padding: "5px", cursor: "pointer" }}
-            onMouseDown={() => handleOnClickSlashMenuItem(block)}
-          >
-            {block.label}
+    <div className="absolute py-4 px-2 z-[999999] bg-white drop-shadow-lg flex flex-col gap-2">
+      {/* Render grouped blocks based on the query */}
+      {Object.keys(groupedBlocks).length ? (
+        Object.keys(groupedBlocks).map((category, index) => (
+          <div key={index} className=" flex flex-col gap-2">
+            <div className=" text-[#807e7e] text-sm">{category}</div>
+            {groupedBlocks[category].map((block, blockIndex) => (
+              <div
+                key={blockIndex}
+                className=" flex flex-col gap-2 text-md cursor-pointer px-2 text-[#2b2b2b]"
+                onMouseDown={() => handleOnClickSlashMenuItem(block)}
+              >
+                {block.label}
+              </div>
+            ))}
           </div>
-        );
-      })}
+        ))
+      ) : (
+        <div style={{ padding: "5px" }}>No results found</div>
+      )}
     </div>
   );
 };

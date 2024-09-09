@@ -57,16 +57,16 @@ function App() {
       console.log("Preview mode disabled!");
     });
 
-    editor.BlockManager.add("two-columns", {
-      label: "Two Columns",
-      content: `
-    <div class="two-columns" style="display: flex;">
-      <div class="column" style="flex: 1; padding: 40px; border: 1px solid #ccc;">Column 3 </div>
-     
-    </div>
-  `,
-      category: "Layout",
-    });
+    //   editor.BlockManager.add("two-columns", {
+    //     label: "Two Columns",
+    //     content: `
+    //   <div class="two-columns" style="display: flex;">
+    //     <div class="column" style="flex: 1; padding: 40px; border: 1px solid #ccc;">Column 3 </div>
+
+    //   </div>
+    // `,
+    //     category: "Layout",
+    //   });
     editor.DomComponents.addType("two-columns", {
       model: {
         defaults: {
@@ -276,10 +276,10 @@ function App() {
 
     // initialize the slash menu
     let finalSlashMenuItems = [
-      { label: "bullet", type: "rte" },
-      { label: "h1", type: "rte" },
-      { label: "strike", type: "rte" },
-      { label: "italic", type: "rte" },
+      { label: "Bullet", name: "bullet", type: "rte", category: "Text" },
+      { label: "H1", name: "h1", type: "rte", category: "Text" },
+      { label: "Strike", name: "strike", type: "rte", category: "Text" },
+      { label: "Italic", name: "italic", type: "rte", category: "Text" },
     ];
 
     // using Blocks API
@@ -291,9 +291,11 @@ function App() {
       if (block.category) {
         if (block.items) {
           block.items.map((item) => {
+            // if label greather than 20 characters dont add to the list
+            if (item.attributes.label.length > 20) return;
             finalSlashMenuItems.push({
               label: item.attributes.label,
-              category: "custom-component",
+              category: "Custom component",
               component_id: item.attributes.id,
             });
           });
@@ -487,12 +489,8 @@ function App() {
           GrapesjsTailwindPlugin,
           CustomPageComponent,
           CustomColumn,
-          CustomLayout,
-          TestComp,
-          CustomColumns,
           parserPostCSS,
           CustomRow,
-          Bootstrap,
           {
             id: "gjs-blocks-basic",
             src: "https://unpkg.com/grapesjs-blocks-basic",
