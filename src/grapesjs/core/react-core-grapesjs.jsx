@@ -99,58 +99,6 @@ const ReactCoreGrapesjs = (editor) => {
     view: coreReactView,
   });
 
-  // Add custom text box type
-  // domc.addType("custom-text-box", {
-  //   isComponent: (el) =>
-  //     el.tagName === "DIV" && el.classList.contains("custom-text-box"),
-  //   model: {
-  //     ...coreReactModel,
-  //     defaults: {
-  //       component: (props) => {
-  //         // Access the trait values from the model's attributes
-  //         const content = props;
-
-  //         return <CustomTextBox {...props} editor={editor} content={content} />;
-  //       }, // Pass the editor as a prop,
-  //       tagName: "div",
-  //       // traits
-  //       traits: [
-  //         {
-  //           label: "Content",
-  //           type: "text",
-  //           name: "content",
-
-  //           changeProp: 1, // adding this changes attribute to property
-  //         },
-  //       ],
-  //       // properties
-  //       content: "This is the starting content",
-
-  //       draggable: true,
-  //       // droppable: true,
-  //       editable: true,
-  //       attributes: { class: "custom-text-box" },
-  //       props: {}, // Add this line to define custom props
-  //     },
-  //     // init
-  //     init() {
-  //       // Also the listener changes from `change:attributes:*` to `change:*` for properties
-  //       this.on("change:content", this.handleContentChange);
-  //     },
-
-  //     // handle property change
-  //     handleContentChange() {
-  //       console.log("Input type changed to: ", this.attributes.content);
-  //     },
-  //   },
-
-  //   view: {
-  //     ...coreReactView,
-  //     init() {
-  //       console.log("Cutom text box rendered");
-  //     },
-  //   },
-  // });
   domc.addType("custom-text-box", {
     isComponent: (el) =>
       el.tagName === "DIV" && el.classList.contains("custom-text-box"),
@@ -164,17 +112,13 @@ const ReactCoreGrapesjs = (editor) => {
             type: "text",
             name: "content",
             value: "",
-            // changeProp: 1, // Ensure that changes to this trait are passed as props
+            // changeProp: 1, // change it to property
           },
         ],
-        // content: "",
         draggable: true,
         editable: true,
         attributes: { class: "custom-text-box" },
-        // props() {
-        //   // try to dynamically dfine props
-        //   return { content: this.get("content") };
-        // },
+
         component: (props) => {
           // get content from attributes
           const content = props.content;
@@ -187,6 +131,7 @@ const ReactCoreGrapesjs = (editor) => {
         this.on("change:content", this.handleContentChange);
       },
       handleContentChange() {
+        // change trait on typing
         const newContent = this.get("content");
         console.log("Content changed to:", newContent);
       },
