@@ -3,6 +3,10 @@ import Tiptap from "../../../tiptap/tiptap.jsx";
 import SlashMenu from "../SlashMenu/SlashMenu.jsx";
 import useGrapesjsEditorStore from "../../../store/GrapesjsEditorStore.jsx";
 import { sliceUntilSlash } from "../../../utils/random.js";
+import {
+  addComponentNextToSelected,
+  getTextAfterFirstWhitespace,
+} from "../../../utils/grapesjs.js";
 
 const CustomTextBox = ({ editor, style, isBulletList, content }) => {
   // console.log("isBulletList flag inside custom-text-box", isBulletList);
@@ -48,7 +52,6 @@ const CustomTextBox = ({ editor, style, isBulletList, content }) => {
     //   " trait content=",
     //   content
     // );
-    // setTiptapContent(newContent);
 
     if (editor) {
       const comp = editor.getSelected();
@@ -101,10 +104,49 @@ const CustomTextBox = ({ editor, style, isBulletList, content }) => {
     console.log("Running focus command");
     tiptapEditor.commands.focus("end");
   };
-  // clear editor text after slash menu click
+  // remove slash from editor after adding comp
   const handleMenuItemClick = () => {
+    console.log("rannnn", tiptapEditor);
+
     if (tiptapEditor) {
-      tiptapEditor.commands.setContent(""); // Clear the content
+      const text = tiptapEditor.getText(); // Get the full text in the editor
+      const lastSlashIndex = text.lastIndexOf("/"); // Find the last occurrence of a slash
+      const textBeforeSlash = text.slice(0, lastSlashIndex);
+      console.log("text==", text);
+      console.log("index of slash=-", lastSlashIndex);
+      console.log("Setting text before slash", textBeforeSlash);
+      tiptapEditor.commands.setContent(textBeforeSlash);
+
+      // if text exists after slash create a new component after the newly added one with that text
+      // this text should be counted only if there is a slash followed by space followed by text, if there is no space then its just query
+      const textAfterSlash = text.slice(lastSlashIndex + 1);
+      console.log("text after slash", textAfterSlash);
+      const textWithoutQuery = getTextAfterFirstWhitespace(textAfterSlash);
+      const replacedText = textWithoutQuery.replace(
+        String.fromCharCode(160),
+        " "
+      );
+
+      if (replacedText[0] === " ") {
+        console.log("Inside text after slash", replacedText);
+
+        // add new comp with remaining text
+        addComponentNextToSelected(
+          grapesjsEditor,
+          {
+            type: "custom-text-box",
+            traits: [
+              {
+                label: "Content",
+                type: "text",
+                name: "content",
+                value: replacedText,
+              },
+            ],
+          },
+          2
+        );
+      }
     }
   };
 

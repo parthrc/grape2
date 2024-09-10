@@ -65,13 +65,14 @@ const Tiptap = ({
     // onUpdate function, runs on every keystroke
     onUpdate({ editor }) {
       const text = editor.getText(); // Get the full text in the editor
-      const lastSlashIndex = text.lastIndexOf("/"); // Find the last occurrence of a slash
+      const lastSlashIndex = text.lastIndexOf("/"); // Find the last position of a slash
 
-      console.log("Starting update");
-      console.log("slash open=", showMenu);
-      console.log("lastSlashIndex", lastSlashIndex);
+      // console.log("Starting update");
+      // console.log("slash open=", showMenu);
+      // console.log("lastSlashIndex", lastSlashIndex);
       if (lastSlashIndex !== -1) {
         // Ensure there is a space before and after the slash
+        // there was conflict between whitespace and keyboard space characters, so we replace first
         const replacedText = text.replace(String.fromCharCode(160), " ");
         const charBefore = replacedText[lastSlashIndex - 1] || "";
         const charAfterQuery = replacedText.slice(lastSlashIndex + 1)[0] || "";
@@ -81,12 +82,14 @@ const Tiptap = ({
         console.log(charBefore === " " || charBefore === "");
         console.log(charAfterQuery === " " || charAfterQuery === "");
 
-        // if slash menu open update query
+        // if slash menu is open followed by query, update query
         if (showMenu && charAfterQuery !== " ") {
           const query = text.slice(lastSlashIndex + 1).split(" ")[0];
           console.log("query=", query);
           onQueryChange(query);
         }
+
+        // if slash menu is open followed by space, close menu
         if (showMenu && charAfterQuery === " ") {
           console.log("Closing menu");
           onToggleMenu(false);

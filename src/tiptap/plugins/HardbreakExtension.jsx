@@ -1,5 +1,5 @@
 import HardBreak from "@tiptap/extension-hard-break";
-import addComponentNextToSelected from "../../utils/grapesjs.js";
+import { addComponentNextToSelected } from "../../utils/grapesjs.js";
 
 const HardbreakExtended = HardBreak.extend({
   addOptions() {

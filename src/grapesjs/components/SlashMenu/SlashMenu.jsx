@@ -1,6 +1,6 @@
 import React from "react";
 import useGrapesjsEditorStore from "../../../store/GrapesjsEditorStore.jsx";
-import addComponentNextToSelected from "../../../utils/grapesjs.js";
+import { addComponentNextToSelected } from "../../../utils/grapesjs.js";
 
 const SlashMenu = ({ handleMenuAction, query, handleMenuItemClick }) => {
   // Get all blocks from the GrapesJS store
