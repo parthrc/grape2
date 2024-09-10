@@ -82,30 +82,6 @@ function App() {
       const parent = model.parent();
       // console.log("Inside mount, Parent =", parent);
       // Check if the parent is a 'two-columns' component
-      if (
-        parent &&
-        parent.get("classes").some((cl) => cl.id === "custom-row")
-      ) {
-        // Count the number of columns in the parent
-
-        const columns = parent
-          .components()
-          .filter((comp) => comp.get("classes"));
-        // const columns = component.components();
-        const columnCount = columns.length;
-
-        // console.log("Inside if", parent, model);
-        // console.log("columns=", columns);
-        // If the number of columns exceeds the maximum, remove the last added column
-        // console.log("Max length", columns.length);
-
-        if (columns.length > maxColumns) {
-          // console.log("Max length", columns.length);
-          // editor.getModel().get("UndoManager").undo();
-          editor.select(model);
-          model.remove();
-        }
-      }
 
       // if (parent && parent.attributes.type === "wrapper") {
       //   console.log("Inside wrapper as a parent");
@@ -134,33 +110,31 @@ function App() {
       //   editor.on("component:add");
       // }
     };
-    const maxColumns = 4;
     // Listen to the event when a component is added
-    editor.on("component:mount", handleMount);
-    // custom row creation
+    // editor.on("component:mount", handleMount);
 
-    const handleComponentAdd = (model) => {
+    // custom row creation
+    const handleComponentAdd = (dataTransferInstance, model) => {
+      // console.log("on component add running");
       const parent = model.parent();
-      console.log("Model name=", model.attributes.type);
-      console.log("Parent Object=", parent);
-      console.log("Parent name=", parent.attributes.type);
-      // we are handling update event for markdown internally
-      // so jsut return if it catches here
-      if (model.attributes.type === "custom-text-box") return;
+      // console.log("Model name=", model.attributes.type);
+      // console.log("Parent Object=", parent);
+      // console.log("Parent name=", parent.attributes.type);
+
       // if a new component is added to the main canvas
       // wrap it inside custom-row component first
       if (parent.attributes.type === "wrapper") {
         console.log("New component added = ", model);
 
         // Temporarily remove the event listener
-        editor.off("component:add", handleComponentAdd);
+        editor.off("canvas:drop", handleComponentAdd);
 
         const position = getPositionOfChild(model);
         const latestAddedComp = parent.getChildAt(position);
-        console.log("Position added at", position);
-        console.log("Latest Added = ", latestAddedComp);
-        console.log("Before replacing", parent.components().models);
-
+        // console.log("Position added at", position);
+        // console.log("Latest Added = ", latestAddedComp);
+        // console.log("Before replacing", parent.components().models);
+        // console.log("Before selected", editor.getSelectedAll());
         // Replace the latest added component with a new one
         latestAddedComp.replaceWith(
           {
@@ -171,15 +145,16 @@ function App() {
           },
           { at: position }
         );
-        console.log("After replacing", parent.components().models);
+
+        // console.log("After replacing", parent.components().models);
+        // console.log("After selected", editor.getSelectedAll());
+
         // Add the event listener back
-        editor.on("component:add", handleComponentAdd);
-        // force reload iframe
-        // reloadIframe(editor);
+        editor.on("canvas:drop", handleComponentAdd);
       }
     };
 
-    // editor.on("component:add", handleComponentAdd);
+    editor.on("canvas:drop", handleComponentAdd);
 
     // on any canvas update, update localStorage
     // editor.on("update", () => {
@@ -293,8 +268,8 @@ function App() {
           block.items.map((item) => {
             // if label greather than 20 characters dont add to the list
             if (item.attributes.label.length > 20) return;
-            console.log("Adding block=", item.attributes.label);
-            console.dir(item.attributes);
+            // console.log("Adding block=", item.attributes.label);
+            // console.dir(item.attributes);
             finalSlashMenuItems.push({
               label: item.attributes.label,
               category: "Custom component",
