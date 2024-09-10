@@ -293,10 +293,13 @@ function App() {
           block.items.map((item) => {
             // if label greather than 20 characters dont add to the list
             if (item.attributes.label.length > 20) return;
+            console.log("Adding block=", item.attributes.label);
+            console.dir(item.attributes);
             finalSlashMenuItems.push({
               label: item.attributes.label,
               category: "Custom component",
               component_id: item.attributes.id,
+              content: item.attributes.content,
             });
           });
         }

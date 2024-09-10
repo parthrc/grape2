@@ -13,7 +13,8 @@ const CustomTextBox = ({ editor, style, isBulletList, content }) => {
   const [tiptapContent, setTiptapContent] = useState("");
   // ref for slash menu
   const slashMenuRef = useRef(null);
-
+  // psotion of slash menu in text box
+  const [slashCoords, setSlashCoords] = useState(null);
   // get tiptapEditor isntance from zustand
   const { tiptapEditor, grapesjsEditor } = useGrapesjsEditorStore();
 
@@ -34,6 +35,11 @@ const CustomTextBox = ({ editor, style, isBulletList, content }) => {
     setQuery(newQuery);
   }, []);
 
+  // handle position change from Tiptap
+  const handleSlashPositionChange = (coords) => {
+    setSlashCoords(coords);
+  };
+
   const handleContentChange = (newContent) => {
     console.log(
       "handleCotentChange fired",
@@ -43,22 +49,13 @@ const CustomTextBox = ({ editor, style, isBulletList, content }) => {
     );
     // setTiptapContent(newContent);
 
-    // console.log("Editor isntance=", editor);
     if (editor) {
       const comp = editor.getSelected();
       if (comp) {
-        // console.log("Comp==", comp);
         // Ensure the selected component is a `custom-text-box`
         if (comp.attributes.type === "custom-text-box") {
-          // console.log("Yes its a custom textbox");
           const contentTrait = comp.getTrait("content");
           if (contentTrait) {
-            // console.log(
-            //   "Setting value on update",
-            //   newContent,
-            //   "contentTrait=",
-            //   contentTrait
-            // );
             contentTrait.setValue(newContent);
           }
         } else {
@@ -135,9 +132,17 @@ const CustomTextBox = ({ editor, style, isBulletList, content }) => {
         onContentChange={handleContentChange}
         grapesjsEditor={grapesjsEditor}
         isBulletList={isBulletList}
+        onSlashPositionChange={handleSlashPositionChange}
       />
       {showMenu && (
-        <div ref={slashMenuRef}>
+        <div
+          ref={slashMenuRef}
+          style={{
+            position: "absolute",
+            top: slashCoords?.top + 20 ?? 0,
+            left: slashCoords?.left + 5 ?? 0,
+          }}
+        >
           <SlashMenu
             handleMenuAction={handleMenuAction}
             query={query}

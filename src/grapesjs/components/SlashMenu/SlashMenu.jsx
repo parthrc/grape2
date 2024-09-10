@@ -9,10 +9,10 @@ const SlashMenu = ({ handleMenuAction, query, handleMenuItemClick }) => {
   // Handler for click on slash menu item
   const handleOnClickSlashMenuItem = (block) => {
     console.log("Block=", block);
+    console.log("editor", grapesjsEditor);
     if (block.category === "Custom component") {
-      // If it's a custom component, create a JSX component and add it next to the selected one
-      const jsxComponent = React.createElement(block.component_id);
-      addComponentNextToSelected(grapesjsEditor, jsxComponent);
+      addComponentNextToSelected(grapesjsEditor, block.content);
+
       handleMenuItemClick();
     }
 

@@ -13,6 +13,7 @@ const Tiptap = ({
   onEnterPress,
   grapesjsEditor,
   isBulletList,
+  onSlashPositionChange,
 }) => {
   // console.log("Editor inside the TIPTAP component,", grapesjsEditor);
   const { setTiptapEditor, isPreviewMode } = useGrapesjsEditorStore();
@@ -73,6 +74,14 @@ const Tiptap = ({
         const query = text.substring(lastSlashIndex + 1);
         onQueryChange(query);
         onToggleMenu(true);
+
+        // Get the position of the last slash
+        const slashPos =
+          editor.state.selection.from - (text.length - lastSlashIndex);
+        const slashCoords = editor.view.coordsAtPos(slashPos);
+
+        // Pass the coordinates to CustomTextBox
+        onSlashPositionChange(slashCoords);
       } else {
         onQueryChange("");
         onToggleMenu(false);
