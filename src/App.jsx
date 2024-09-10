@@ -152,6 +152,32 @@ function App() {
         // Add the event listener back
         editor.on("canvas:drop", handleComponentAdd);
       }
+
+      // wrap comps dropped inside custom-row with custom-column
+      if (parent.attributes.type === "custom-row") {
+        editor.off("canvas:drop", handleComponentAdd);
+
+        console.log("New comp added to row", model);
+        // get all children
+        const columns = parent.components();
+        console.log("Columns", columns);
+
+        const columnCount = columns.length;
+        //get postiion of dropped comp
+        const position = getPositionOfChild(model);
+        console.log("Position of new dropepd comp", position);
+        // get the newly added component
+        const latestAddedComp = parent.getChildAt(position);
+        // wrap newly added comp with custom column
+        latestAddedComp.replaceWith(
+          {
+            type: "custom-column",
+            components: [latestAddedComp.clone()],
+          },
+          { at: position }
+        );
+        editor.on("canvas:drop", handleComponentAdd);
+      }
     };
 
     editor.on("canvas:drop", handleComponentAdd);

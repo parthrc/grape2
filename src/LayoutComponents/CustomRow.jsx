@@ -1,4 +1,4 @@
-import { reloadIframe } from "../utils/grapesjs-utils.js";
+import { getPositionOfChild, reloadIframe } from "../utils/grapesjs-utils.js";
 
 const CustomRow = (editor) => {
   editor.Components.addType("custom-row", {
@@ -9,7 +9,10 @@ const CustomRow = (editor) => {
       defaults: {
         tagName: "div",
         attributes: { class: "custom-row" },
-        droppable: true,
+        droppable: (targetComp, destinationComp) => {
+          if (destinationComp.components().length > 3) return false;
+          return true;
+        },
         draggable: true,
         components: [
           {
@@ -30,24 +33,41 @@ const CustomRow = (editor) => {
 
       init() {
         // Listen to the component:add event to handle new components
-        this.listenTo(this.components(), "add", this.adjustColumnWidths);
+        // this.listenTo(this.components(), "add", this.adjustColumnWidths);
       },
 
-      adjustColumnWidths(model) {
-        const columns = this.components();
-        const columnCount = columns.length;
+      // adjustColumnWidths(model) {
+      //   this.off(this.components(), "add", this.adjustColumnWidths);
 
-        // set widths based on number of columns by updating the style trait
-        columns.each((column, index) => {
-          const currentStyle = column.getStyle();
-          if (index < 4) {
-            column.setStyle({
-              ...currentStyle,
-              width: `${100 / Math.min(columnCount, 4)}%`,
-            });
-          }
-        });
-      },
+      //   const columns = this.components();
+      //   const columnCount = columns.length;
+      //   const parent = model.parent();
+      //   console.log("Current colums", columns);
+      //   //get postiion of dropped comp
+      //   const position = getPositionOfChild(model);
+      //   console.log("Position of new dropepd comp", position);
+      //   // get the newly added component
+      //   const latestAddedComp = parent.getChildAt(position);
+      //   // wrap newly added comp with custom column
+      //   latestAddedComp.replaceWith(
+      //     {
+      //       type: "custom-column",
+      //       components: [latestAddedComp.clone()],
+      //     },
+      //     { at: position }
+      //   );
+      //   // set widths based on number of columns by updating the style trait
+      //   columns.each((column, index) => {
+      //     const currentStyle = column.getStyle();
+      //     if (index < 4) {
+      //       column.setStyle({
+      //         ...currentStyle,
+      //         width: `${100 / Math.min(columnCount, 4)}%`,
+      //       });
+      //     }
+      //   });
+      //   this.on(this.components(), "add", this.adjustColumnWidths);
+      // },
     },
 
     view: {
