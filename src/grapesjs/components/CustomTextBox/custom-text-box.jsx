@@ -20,8 +20,8 @@ const CustomTextBox = ({ editor, style, isBulletList, content }) => {
 
   // useEffect
   useEffect(() => {
-    console.log("Custom box RAN");
-    console.log("Starting Content=", content);
+    // console.log("Custom box RAN");
+    // console.log("Starting Content=", content);
     setTiptapContent(content);
   }, [content]);
 
@@ -32,6 +32,7 @@ const CustomTextBox = ({ editor, style, isBulletList, content }) => {
 
   // handle slash menu query
   const handleQueryChange = useCallback((newQuery) => {
+    console.log("Handling query=", newQuery);
     setQuery(newQuery);
   }, []);
 
@@ -41,12 +42,12 @@ const CustomTextBox = ({ editor, style, isBulletList, content }) => {
   };
 
   const handleContentChange = (newContent) => {
-    console.log(
-      "handleCotentChange fired",
-      newContent,
-      " trait content=",
-      content
-    );
+    // console.log(
+    //   "handleCotentChange fired",
+    //   newContent,
+    //   " trait content=",
+    //   content
+    // );
     // setTiptapContent(newContent);
 
     if (editor) {
@@ -133,6 +134,7 @@ const CustomTextBox = ({ editor, style, isBulletList, content }) => {
         grapesjsEditor={grapesjsEditor}
         isBulletList={isBulletList}
         onSlashPositionChange={handleSlashPositionChange}
+        showMenu={showMenu}
       />
       {showMenu && (
         <div

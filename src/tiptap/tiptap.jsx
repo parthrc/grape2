@@ -14,10 +14,10 @@ const Tiptap = ({
   grapesjsEditor,
   isBulletList,
   onSlashPositionChange,
+  showMenu,
 }) => {
   // console.log("Editor inside the TIPTAP component,", grapesjsEditor);
   const { setTiptapEditor, isPreviewMode } = useGrapesjsEditorStore();
-  // Ensure that ccontent has a fallback value
 
   // console.log("Content inside the tiptap==", typeof ccontent);
   const tiptapEditor = useEditor({
@@ -35,8 +35,7 @@ const Tiptap = ({
     // This option gives us the control to disable the default behavior of re-rendering the editor on every transaction.
     shouldRerenderOnTransaction: false,
 
-    content: content, // Ensure content has a fallback
-    // content: `askdljalkjdalkdj`,
+    content: content,
 
     editorProps: {
       attributes: {
@@ -61,53 +60,67 @@ const Tiptap = ({
     // when editor loses focus
     onBlur() {
       onToggleMenu(false);
-      // add new custom-text-box onBlur
-      // grapesjsEditor.addComponents({ type: "custom-text-box" });
     },
+
     // onUpdate function, runs on every keystroke
-
     onUpdate({ editor }) {
-      const text = editor.getText();
-      // get index of slash
-      const lastSlashIndex = text.lastIndexOf("/");
+      const text = editor.getText(); // Get the full text in the editor
+      const lastSlashIndex = text.lastIndexOf("/"); // Find the last occurrence of a slash
+
+      console.log("Starting update");
+      console.log("slash open=", showMenu);
+      console.log("lastSlashIndex", lastSlashIndex);
       if (lastSlashIndex !== -1) {
-        const query = text.substring(lastSlashIndex + 1);
-        onQueryChange(query);
-        onToggleMenu(true);
+        // Ensure there is a space before and after the slash
+        const replacedText = text.replace(String.fromCharCode(160), " ");
+        const charBefore = replacedText[lastSlashIndex - 1] || "";
+        const charAfterQuery = replacedText.slice(lastSlashIndex + 1)[0] || "";
+        console.log("charBefore", charBefore.toString());
+        console.log("charAfterQuery", charAfterQuery);
 
-        // Get the position of the last slash
-        const slashPos =
-          editor.state.selection.from - (text.length - lastSlashIndex);
-        const slashCoords = editor.view.coordsAtPos(slashPos);
+        console.log(charBefore === " " || charBefore === "");
+        console.log(charAfterQuery === " " || charAfterQuery === "");
 
-        // Pass the coordinates to CustomTextBox
-        onSlashPositionChange(slashCoords);
+        // if slash menu open update query
+        if (showMenu && charAfterQuery !== " ") {
+          const query = text.slice(lastSlashIndex + 1).split(" ")[0];
+          console.log("query=", query);
+          onQueryChange(query);
+        }
+        if (showMenu && charAfterQuery === " ") {
+          console.log("Closing menu");
+          onToggleMenu(false);
+          return;
+        }
+        if (
+          (charBefore === " " || charBefore === "") &&
+          (charAfterQuery === " " || charAfterQuery === "")
+        ) {
+          console.log("True");
+          // Get the query by extracting everything after the slash until the next space
+
+          onToggleMenu(true);
+
+          // Get the position of the last slash
+          const slashPos =
+            editor.state.selection.from - (text.length - lastSlashIndex);
+          const slashCoords = editor.view.coordsAtPos(slashPos);
+
+          // Pass the coordinates to CustomTextBox
+          onSlashPositionChange(slashCoords);
+        }
+        //  else {
+        //   // Reset if the conditions are not met
+        //   onQueryChange("");
+        //   onToggleMenu(false);
+        // }
       } else {
         onQueryChange("");
         onToggleMenu(false);
       }
-      // console.log("tiptap updated: ", text);
 
       // Pass the updated content back to the parent component
       onContentChange(editor.getHTML());
-    },
-
-    // Adding custom keyboard shortcuts using addKeyboardShortcuts
-    addKeyboardShortcuts() {
-      return {
-        Enter: ({ editor }) => {
-          // Check if the editor is active in bullet list mode
-          if (editor.isActive("bulletList")) {
-            // Handle Enter key differently for bullet lists
-            editor.commands.insertContent("<li>New item</li>"); // Example for adding a new item
-            return true; // Prevent default behavior
-          }
-
-          // Handle Enter key in other contexts if needed
-          return false;
-        },
-        // Define other shortcuts if necessary
-      };
     },
   });
 
