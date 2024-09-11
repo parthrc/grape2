@@ -279,6 +279,8 @@ function App() {
     let finalSlashMenuItems = [
       { label: "Bullet", name: "bullet", type: "rte", category: "Text" },
       { label: "H1", name: "h1", type: "rte", category: "Text" },
+      { label: "H2", name: "h2", type: "rte", category: "Text" },
+      { label: "H3", name: "h3", type: "rte", category: "Text" },
       { label: "Strike", name: "strike", type: "rte", category: "Text" },
       { label: "Italic", name: "italic", type: "rte", category: "Text" },
       { label: "Ordered", name: "ordered", type: "rte", category: "Text" },

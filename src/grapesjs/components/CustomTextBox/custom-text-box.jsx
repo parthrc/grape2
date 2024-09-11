@@ -230,6 +230,13 @@ const CustomTextBox = ({
       case "h1":
         tiptapEditor.chain().focus().toggleHeading({ level: 1 }).run();
         break;
+      case "h2":
+        tiptapEditor.chain().focus().toggleHeading({ level: 2 }).run();
+        break;
+
+      case "h3":
+        tiptapEditor.chain().focus().toggleHeading({ level: 3 }).run();
+        break;
 
       default:
         console.log("default case");
