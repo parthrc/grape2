@@ -7,6 +7,10 @@ import {
   addComponentNextToSelected,
   getTextAfterFirstWhitespace,
 } from "../../../utils/grapesjs.js";
+import { nanoid } from "nanoid";
+import { useEditor } from "@tiptap/react";
+import StarterKit from "@tiptap/starter-kit";
+import HardbreakExtended from "../../../tiptap/plugins/HardbreakExtension.jsx";
 
 const CustomTextBox = ({ editor, style, isBulletList, content }) => {
   // console.log("isBulletList flag inside custom-text-box", isBulletList);
@@ -20,12 +24,132 @@ const CustomTextBox = ({ editor, style, isBulletList, content }) => {
   // psotion of slash menu in text box
   const [slashCoords, setSlashCoords] = useState(null);
   // get tiptapEditor isntance from zustand
-  const { tiptapEditor, grapesjsEditor } = useGrapesjsEditorStore();
+  const {
+    addTiptapEditor,
+    grapesjsEditor,
+    getTiptapEditor,
+    removeTiptapEditor,
+  } = useGrapesjsEditorStore();
 
+  const newTiptapEditor = useEditor({
+    extensions: [
+      StarterKit,
+      HardbreakExtended.configure({
+        grapesjsEditor: grapesjsEditor,
+      }),
+
+      // CustomEnterExtension,
+      // Placeholder.configure({
+      //   placeholder: `start typing or use "/" for commands...`,
+      // }),
+    ],
+    // This option gives us the control to disable the default behavior of re-rendering the editor on every transaction.
+    shouldRerenderOnTransaction: false,
+
+    content: content,
+
+    editorProps: {
+      attributes: {
+        class: "customTiptapInput",
+      },
+    },
+
+    autofocus: true,
+    // on focus
+    onFocus({ editor }) {
+      console.log("Tip tap focused is editor destroyed", editor.isDestroyed);
+    },
+    // add bullet list if flag is set
+    onCreate({ editor }) {
+      console.log("Tiptap on create=", content);
+      // console.log("isBulletList", isBulletList);
+      if (isBulletList) {
+        // console.log("isBulkletList flag is TRUE");
+        editor.chain().focus().toggleBulletList().run();
+      }
+    },
+    // when editor loses focus
+    onBlur() {
+      handleToggleMenu(false);
+    },
+
+    // onUpdate function, runs on every keystroke
+    onUpdate({ editor }) {
+      const text = editor.getText(); // Get the full text in the editor
+      const lastSlashIndex = text.lastIndexOf("/"); // Find the last position of a slash
+
+      // console.log("Starting update");
+      // console.log("slash open=", showMenu);
+      // console.log("lastSlashIndex", lastSlashIndex);
+      if (lastSlashIndex !== -1) {
+        // Ensure there is a space before and after the slash
+        // there was conflict between whitespace and keyboard space characters, so we replace first
+        const replacedText = text.replace(String.fromCharCode(160), " ");
+        const charBefore = replacedText[lastSlashIndex - 1] || "";
+        const charAfterQuery = replacedText.slice(lastSlashIndex + 1)[0] || "";
+        console.log("charBefore", charBefore.toString());
+        console.log("charAfterQuery", charAfterQuery);
+
+        console.log(charBefore === " " || charBefore === "");
+        console.log(charAfterQuery === " " || charAfterQuery === "");
+
+        // if slash menu is open followed by query, update query
+        if (showMenu && charAfterQuery !== " ") {
+          const query = text.slice(lastSlashIndex + 1).split(" ")[0];
+          console.log("query=", query);
+          handleQueryChange(query);
+        }
+
+        // if slash menu is open followed by space, close menu
+        if (showMenu && charAfterQuery === " ") {
+          console.log("Closing menu");
+          handleToggleMenu(false);
+          return;
+        }
+        if (
+          (charBefore === " " || charBefore === "") &&
+          (charAfterQuery === " " || charAfterQuery === "")
+        ) {
+          console.log("True");
+          // Get the query by extracting everything after the slash until the next space
+
+          handleToggleMenu(true);
+
+          // Get the position of the last slash
+          const slashPos =
+            editor.state.selection.from - (text.length - lastSlashIndex);
+          const slashCoords = editor.view.coordsAtPos(slashPos);
+
+          // Pass the coordinates to CustomTextBox
+          handleSlashPositionChange(slashCoords);
+        }
+        //  else {
+        //   // Reset if the conditions are not met
+        //   onQueryChange("");
+        //   onToggleMenu(false);
+        // }
+      } else {
+        handleQueryChange("");
+        handleToggleMenu(false);
+      }
+
+      // Pass the updated content back to the parent component
+      handleContentChange(editor.getHTML());
+    },
+  });
+
+  // create a new uniqueId for this comp
+
+  const uniqueId = useRef(nanoid(8)).current;
+  console.log("uniqueId", uniqueId);
+  const tiptapEditor = getTiptapEditor(uniqueId);
+  console.log("Get tiptap editor=", tiptapEditor);
   // useEffect
   useEffect(() => {
-    // console.log("Custom box RAN");
-    // console.log("Starting Content=", content);
+    // create a new tiptapEditor instance
+    if (!tiptapEditor) addTiptapEditor(uniqueId, newTiptapEditor);
+    // addTiptapEditor
+    // set content
     setTiptapContent(content);
   }, [content]);
 
@@ -177,6 +301,7 @@ const CustomTextBox = ({ editor, style, isBulletList, content }) => {
         isBulletList={isBulletList}
         onSlashPositionChange={handleSlashPositionChange}
         showMenu={showMenu}
+        tiptapEditor={tiptapEditor}
       />
       {showMenu && (
         <div

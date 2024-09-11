@@ -1,27 +1,3 @@
-// import { create } from "zustand";
-
-// const useGrapesjsEditorStore = create((set) => ({
-//   grapesjsEditor: null,
-//   setGrapesjsEditor: (editor) => set({ grapesjsEditor: editor }),
-//   availableBlocks: [],
-//   setAvailableBlocks: (blocks) => set({ availableBlocks: blocks }),
-//   tiptapEditor: null,
-//   setTiptapEditor: (editor) => set({ tiptapEditor: editor }),
-//   canvasPages: [],
-//   setCanvasPages: (canvasPages) => set({ canvasPages }),
-//   addCanvasPage: (page) =>
-//     set((state) => ({ canvasPages: [...state.canvasPages, page] })),
-//   updateCanvasPage: (updatedPage) =>
-//     set((state) => ({
-//       canvasPages: state.canvasPages.map((page) =>
-//         page.index === updatedPage.index ? updatedPage : page
-//       ),
-//     })),
-//   isPreviewMode: false,
-//   setPreviewMode: (isPreview) => set({ isPreviewMode: isPreview }),
-// }));
-
-// export default useGrapesjsEditorStore;
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
@@ -40,13 +16,31 @@ function safeStringify(obj) {
 
 const useGrapesjsEditorStore = create(
   persist(
-    (set) => ({
+    (set, get) => ({
       grapesjsEditor: null,
       setGrapesjsEditor: (editor) => set({ grapesjsEditor: editor }),
       availableBlocks: [],
       setAvailableBlocks: (blocks) => set({ availableBlocks: blocks }),
       tiptapEditor: null,
-      setTiptapEditor: (editor) => set({ tiptapEditor: editor }),
+      // setTiptapEditor: (editor) => set({ tiptapEditor: editor }),
+      tiptapEditors: [],
+      addTiptapEditor: (id, editor) =>
+        set((state) => {
+          if (!state.tiptapEditors[id]) {
+            // Only add if the editor doesn't already exist
+            return { tiptapEditors: { ...state.tiptapEditors, [id]: editor } };
+          }
+        }),
+      removeTiptapEditor: (id) =>
+        set((state) => {
+          const newEditors = { ...state.tiptapEditors };
+          delete newEditors[id];
+          return { tiptapEditors: newEditors };
+        }),
+      getTiptapEditor: (id) => {
+        const state = get();
+        return state.tiptapEditors[id] || null;
+      },
       canvasPages: [],
       setCanvasPages: (canvasPages) => set({ canvasPages }),
       addCanvasPage: (page) =>
