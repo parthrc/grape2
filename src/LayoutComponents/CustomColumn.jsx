@@ -21,11 +21,10 @@ const CustomColumn = (editor) => {
         // Default styles
         style: {
           width: "100%",
-          padding: "10px",
-          "background-color": "#ffffff",
+          padding: "5px",
+
           color: "#000000",
-          border: "1px solid #a80404",
-          "border-radius": "5px",
+          border: "1px solid #000000",
           "font-size": "16px",
           "min-height": "50px",
         },

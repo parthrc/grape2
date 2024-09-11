@@ -284,24 +284,8 @@ const CustomTextBox = ({
     }
   };
 
-  const styles = {
-    container: {
-      border: "1px solid black",
-      backgroundColor: "white",
-      transition: "background-color 0.3s",
-      padding: "5px",
-      position: "relative",
-    },
-
-    innerBox: {
-      margin: "1px",
-      padding: "5px",
-      backgroundColor: "#dadada",
-    },
-  };
-
   return (
-    <div style={styles.innerBox}>
+    <div className="bg-white">
       <Tiptap
         onToggleMenu={handleToggleMenu}
         onQueryChange={handleQueryChange}

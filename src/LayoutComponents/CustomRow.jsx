@@ -21,53 +21,17 @@ const CustomRow = (editor) => {
         ],
         style: {
           display: "flex",
-          padding: "10px",
-          "background-color": "#e0f0ff",
+          padding: "5px",
+          
           color: "#000000",
-          border: "1px solid #0454a8",
-          "border-radius": "5px",
+          border: "1px solid #000000",
+
           "font-size": "16px",
           "min-height": "50px",
         },
       },
 
-      init() {
-        // Listen to the component:add event to handle new components
-        // this.listenTo(this.components(), "add", this.adjustColumnWidths);
-      },
-
-      // adjustColumnWidths(model) {
-      //   this.off(this.components(), "add", this.adjustColumnWidths);
-
-      //   const columns = this.components();
-      //   const columnCount = columns.length;
-      //   const parent = model.parent();
-      //   console.log("Current colums", columns);
-      //   //get postiion of dropped comp
-      //   const position = getPositionOfChild(model);
-      //   console.log("Position of new dropepd comp", position);
-      //   // get the newly added component
-      //   const latestAddedComp = parent.getChildAt(position);
-      //   // wrap newly added comp with custom column
-      //   latestAddedComp.replaceWith(
-      //     {
-      //       type: "custom-column",
-      //       components: [latestAddedComp.clone()],
-      //     },
-      //     { at: position }
-      //   );
-      //   // set widths based on number of columns by updating the style trait
-      //   columns.each((column, index) => {
-      //     const currentStyle = column.getStyle();
-      //     if (index < 4) {
-      //       column.setStyle({
-      //         ...currentStyle,
-      //         width: `${100 / Math.min(columnCount, 4)}%`,
-      //       });
-      //     }
-      //   });
-      //   this.on(this.components(), "add", this.adjustColumnWidths);
-      // },
+      init() {},
     },
 
     view: {
