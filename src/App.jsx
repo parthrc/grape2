@@ -281,6 +281,7 @@ function App() {
       { label: "H1", name: "h1", type: "rte", category: "Text" },
       { label: "Strike", name: "strike", type: "rte", category: "Text" },
       { label: "Italic", name: "italic", type: "rte", category: "Text" },
+      { label: "Ordered", name: "ordered", type: "rte", category: "Text" },
     ];
 
     // using Blocks API

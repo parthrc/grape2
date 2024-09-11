@@ -11,8 +11,15 @@ import { nanoid } from "nanoid";
 import { useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import HardbreakExtended from "../../../tiptap/plugins/HardbreakExtension.jsx";
+import OrderedList from "@tiptap/extension-ordered-list";
 
-const CustomTextBox = ({ editor, style, isBulletList, content }) => {
+const CustomTextBox = ({
+  editor,
+  style,
+  isBulletList,
+  content,
+  isOrderedList,
+}) => {
   // console.log("isBulletList flag inside custom-text-box", isBulletList);
   // State to manage slash menu visibility
   const [showMenu, setShowMenu] = useState(false);
@@ -37,11 +44,7 @@ const CustomTextBox = ({ editor, style, isBulletList, content }) => {
       HardbreakExtended.configure({
         grapesjsEditor: grapesjsEditor,
       }),
-
-      // CustomEnterExtension,
-      // Placeholder.configure({
-      //   placeholder: `start typing or use "/" for commands...`,
-      // }),
+      OrderedList,
     ],
     // This option gives us the control to disable the default behavior of re-rendering the editor on every transaction.
     shouldRerenderOnTransaction: false,
@@ -66,6 +69,10 @@ const CustomTextBox = ({ editor, style, isBulletList, content }) => {
       if (isBulletList) {
         // console.log("isBulkletList flag is TRUE");
         editor.chain().focus().toggleBulletList().run();
+      }
+      if (isOrderedList) {
+        // console.log("isBulkletList flag is TRUE");
+        editor.chain().focus().toggleOrderedList().run();
       }
     },
     // when editor loses focus
@@ -216,6 +223,9 @@ const CustomTextBox = ({ editor, style, isBulletList, content }) => {
         break;
       case "bullet":
         tiptapEditor.chain().focus().toggleBulletList().run();
+        break;
+      case "ordered":
+        tiptapEditor.chain().focus().toggleOrderedList().run();
         break;
       case "h1":
         tiptapEditor.chain().focus().toggleHeading({ level: 1 }).run();

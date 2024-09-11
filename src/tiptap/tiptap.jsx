@@ -20,10 +20,16 @@ const Tiptap = ({
 
     // if tiptap editor exists with content
     if (tiptapEditor && content) {
-      if (tiptapEditor.isActive("bulletList")) {
-        tiptapEditor.commands.setContent(content); // Set content if in bullet list format
-      } else {
-        tiptapEditor.commands.setContent(content); // Default setContent
+      if (tiptapEditor && content) {
+        if (tiptapEditor.isActive("bulletList")) {
+          console.log("Bullet list is active");
+          tiptapEditor.commands.setContent(content); // Set content if in bullet list format
+        } else if (tiptapEditor.isActive("orderedList")) {
+          console.log("Ordered list is active");
+          tiptapEditor.commands.setContent(content); // Set content if in ordered list format
+        } else {
+          tiptapEditor.commands.setContent(content); // Default setContent
+        }
       }
     }
   }, [
