@@ -11,6 +11,7 @@ const CustomColumn = (editor) => {
         attributes: { class: "custom-column" },
         droppable: true,
         draggable: true,
+        resizable: true,
         // A column
         components: [
           {
